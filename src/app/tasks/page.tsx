@@ -1,0 +1,10 @@
+import { Suspense } from "react";
+import { TasksClient } from "./tasks-client";
+
+export default function TasksPage() {
+  return (
+    <Suspense>
+      <TasksClient />
+    </Suspense>
+  );
+}
