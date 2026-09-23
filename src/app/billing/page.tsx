@@ -2,14 +2,19 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { useAppData } from "@/lib/app-context";
 import { formatDate, fullName } from "@/lib/patient-helpers";
 import type { PaymentType } from "@/lib/types";
-import { BillingStatusBadge } from "@/components/status-badge";
-import { PatientAvatar } from "@/components/patient-avatar";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { BillingStatusBadge } from "@/components/ds/status-badge";
+import { PatientAvatar } from "@/components/ds/patient-avatar";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PageHeader } from "@/components/ds/page-header";
+import { Toolbar } from "@/components/ds/toolbar";
+import { SearchInput } from "@/components/ds/search-input";
+import { FilterChip } from "@/components/ds/filter-chip";
+import { TableCard } from "@/components/ds/table-card";
+import { EmptyState } from "@/components/ds/empty-state";
+import { StatTile } from "@/components/ds/stat-tile";
 
 const PAYMENT_FILTERS: { label: string; value: PaymentType | "ALL" }[] = [
   { label: "All", value: "ALL" },
@@ -52,90 +57,50 @@ export default function BillingPage() {
   if (currentUser.role !== "ADMIN") {
     return (
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 py-24 text-center">
-        <h1 className="text-xl font-semibold">Admin only</h1>
-        <p className="text-sm text-muted-foreground">Billing and activity reporting is only visible to Admin staff.</p>
+        <h1 className="text-h3">Admin only</h1>
+        <p className="text-body text-muted-foreground">Billing and activity reporting is only visible to Admin staff.</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <div>
-        <h1 className="text-[28px] leading-9 font-bold tracking-tight text-balance">Billing &amp; activity</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Compiled billing confirmations across the clinic.</p>
-      </div>
+      <PageHeader title="Billing & activity" description="Compiled billing confirmations across the clinic." />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="col-span-2 flex flex-col justify-between rounded-xl bg-primary px-5 py-4 text-primary-foreground sm:col-span-1">
-          <span className="text-sm font-medium opacity-90">Total billed</span>
-          <span className="mt-3 text-3xl font-semibold tabular-nums">£{totals.total.toLocaleString()}</span>
-        </div>
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-card px-4 py-4">
-          <span className="text-xs font-medium text-muted-foreground">Self-pay</span>
-          <span className="mt-3 text-2xl font-semibold tabular-nums text-card-foreground">£{totals.selfPay.toLocaleString()}</span>
-        </div>
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-card px-4 py-4">
-          <span className="text-xs font-medium text-muted-foreground">Insurer</span>
-          <span className="mt-3 text-2xl font-semibold tabular-nums text-card-foreground">£{totals.insurer.toLocaleString()}</span>
-        </div>
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-card px-4 py-4">
-          <span className="text-xs font-medium text-muted-foreground">Awaiting insurer</span>
-          <span className="mt-3 text-2xl font-semibold tabular-nums text-card-foreground">{totals.invoiced}</span>
-        </div>
+        <StatTile label="Total billed" value={`£${totals.total.toLocaleString()}`} emphasis className="col-span-2 sm:col-span-1" />
+        <StatTile label="Self-pay" value={`£${totals.selfPay.toLocaleString()}`} />
+        <StatTile label="Insurer" value={`£${totals.insurer.toLocaleString()}`} />
+        <StatTile label="Awaiting insurer" value={totals.invoiced} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-56 flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by patient name"
-            className="pl-9"
-          />
-        </div>
+      <Toolbar meta={`Showing ${filtered.length} of ${rows.length}`}>
+        <SearchInput value={query} onChange={setQuery} placeholder="Search by patient name" />
         {PAYMENT_FILTERS.map((f) => (
-          <button
-            key={f.value}
-            type="button"
-            onClick={() => setPaymentFilter(f.value)}
-            className={cn(
-              "shrink-0 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
-              paymentFilter === f.value
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-input text-muted-foreground hover:bg-secondary/60",
-            )}
-          >
+          <FilterChip key={f.value} active={paymentFilter === f.value} onClick={() => setPaymentFilter(f.value)}>
             {f.label}
-          </button>
+          </FilterChip>
         ))}
-        <span className="ml-auto text-sm text-muted-foreground">
-          Showing {filtered.length} of {rows.length}
-        </span>
-      </div>
+      </Toolbar>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            {rows.length === 0 ? "No billing confirmations logged yet." : "No records match these filters."}
-          </p>
-        </div>
+        <EmptyState message={rows.length === 0 ? "No billing confirmations logged yet." : "No records match these filters."} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border bg-muted/40 text-left text-xs font-medium text-muted-foreground">
-                <th className="px-4 py-2.5 font-medium">Patient</th>
-                <th className="px-4 py-2.5 font-medium">Payment</th>
-                <th className="px-4 py-2.5 font-medium">Amount</th>
-                <th className="px-4 py-2.5 font-medium">Status</th>
-                <th className="hidden px-4 py-2.5 font-medium md:table-cell">Compiled</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
+        <TableCard>
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Patient</TableHead>
+                <TableHead>Payment</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="hidden md:table-cell">Compiled</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map(({ record, patient }) => (
-                <tr key={record.id} className="transition-colors hover:bg-secondary/50">
-                  <td className="px-4 py-3.5 font-semibold">
+                <TableRow key={record.id}>
+                  <TableCell className="font-semibold">
                     {patient ? (
                       <Link href={`/patients/${patient.id}`} className="flex items-center gap-3 hover:underline">
                         <PatientAvatar name={fullName(patient)} />
@@ -144,20 +109,20 @@ export default function BillingPage() {
                     ) : (
                       "Unknown"
                     )}
-                  </td>
-                  <td className="px-4 py-3.5 text-muted-foreground">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
                     {record.paymentType === "SELF_PAY" ? "Self-pay" : `Insurer${record.insurerName ? ` (${record.insurerName})` : ""}`}
-                  </td>
-                  <td className="px-4 py-3.5 tabular-nums">£{record.amount.toLocaleString()}</td>
-                  <td className="px-4 py-3.5">
+                  </TableCell>
+                  <TableCell className="tabular-nums">£{record.amount.toLocaleString()}</TableCell>
+                  <TableCell>
                     <BillingStatusBadge status={record.status} />
-                  </td>
-                  <td className="hidden px-4 py-3.5 text-muted-foreground md:table-cell">{formatDate(record.compiledAt)}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="hidden text-muted-foreground md:table-cell">{formatDate(record.compiledAt)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableCard>
       )}
     </div>
   );

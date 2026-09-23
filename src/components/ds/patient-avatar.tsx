@@ -24,7 +24,7 @@ export function PatientAvatar({ name, className }: { name: string; className?: s
       aria-hidden="true"
       style={{ backgroundColor: `oklch(0.5 0.13 ${hueFor(name)})` }}
       className={cn(
-        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white",
+        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-caption font-semibold text-white",
         className,
       )}
     >

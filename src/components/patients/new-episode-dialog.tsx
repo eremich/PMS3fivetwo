@@ -15,8 +15,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { PriorityBadge } from "@/components/status-badge";
+import { RadioGroup } from "@/components/ui/radio-group";
+import { RadioCard } from "@/components/ds/radio-card";
+import { PriorityBadge } from "@/components/ds/status-badge";
 
 const CATEGORIES: ReferralCategory[] = [
   "RADIOLOGY",
@@ -93,16 +94,9 @@ export function NewEpisodeDialog({ open, onOpenChange, patientId, onCreated }: N
             <Label>Priority</Label>
             <RadioGroup value={priority} onValueChange={(v) => setPriority(v as Priority)} className="flex flex-col gap-2">
               {PRIORITIES.map((p) => (
-                <label
-                  key={p}
-                  htmlFor={`priority-${p}`}
-                  className="flex cursor-pointer items-center justify-between rounded-lg border border-input px-3 py-2 transition-colors duration-150 ease-out has-data-[checked]:border-primary has-data-[checked]:bg-primary/5"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <RadioGroupItem id={`priority-${p}`} value={p} />
-                    <PriorityBadge priority={p} />
-                  </span>
-                </label>
+                <RadioCard key={p} id={`priority-${p}`} value={p}>
+                  <PriorityBadge priority={p} />
+                </RadioCard>
               ))}
             </RadioGroup>
           </div>

@@ -52,7 +52,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-body transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   active
                     ? "border-border bg-card font-semibold text-foreground shadow-xs"
                     : "border-transparent font-medium text-sidebar-foreground hover:bg-card/70 hover:text-foreground",
@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link href="/" aria-label="New Malden Diagnostic Centre — home" className="md:hidden">
               <Image src="/logo.png" alt="New Malden Diagnostic Centre" width={762} height={185} priority className="h-9 w-auto" />
             </Link>
-            <p className="hidden text-sm text-muted-foreground md:block">{todayLabel()}</p>
+            <p className="hidden text-body text-muted-foreground md:block">{todayLabel()}</p>
             <RoleSwitcher />
           </header>
 
@@ -85,7 +85,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "shrink-0 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors",
+                    "shrink-0 rounded-lg px-3.5 py-1.5 text-body font-medium transition-colors",
                     active ? "bg-secondary font-semibold text-foreground" : "text-muted-foreground hover:bg-secondary/60",
                   )}
                 >

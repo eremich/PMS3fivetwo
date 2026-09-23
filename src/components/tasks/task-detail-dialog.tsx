@@ -17,8 +17,9 @@ import {
   getTaskResults,
 } from "@/lib/patient-helpers";
 import type { FormCaptureSource, ResultStatus, TaskStatus } from "@/lib/types";
-import { AppointmentStatusBadge, PriorityBadge, ResultStatusBadge, TaskStatusBadge } from "@/components/status-badge";
+import { AppointmentStatusBadge, PriorityBadge, ResultStatusBadge, TaskStatusBadge } from "@/components/ds/status-badge";
 import { Button } from "@/components/ui/button";
+import { SectionLabel, SectionPanel } from "@/components/ds/section-panel";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -215,8 +216,8 @@ export function TaskDetailDialog({
             </div>
           )
         ) : (
-          <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
-            <p className="text-sm font-medium">{ACTION_LABELS[pendingAction]} — add a reason (optional)</p>
+          <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+            <p className="text-body font-medium">{ACTION_LABELS[pendingAction]} — add a reason (optional)</p>
             <Textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -235,14 +236,10 @@ export function TaskDetailDialog({
           </div>
         )}
 
-        <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
-          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
-            Appointment
-          </div>
+        <SectionPanel icon={CalendarClock} title="Appointment">
           {activeAppointment && activeAppointment.status !== "CANCELLED" ? (
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm">
+              <p className="text-body">
                 {formatDateTime(activeAppointment.scheduledAt)}
                 {activeAppointment.location && <span className="text-muted-foreground"> · {activeAppointment.location}</span>}
               </p>
@@ -275,7 +272,7 @@ export function TaskDetailDialog({
           ) : (
             <div className="flex flex-col gap-2.5">
               {activeAppointment?.status === "CANCELLED" && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-caption text-muted-foreground">
                   Previous appointment cancelled — {formatDateTime(activeAppointment.scheduledAt)}
                 </p>
               )}
@@ -305,13 +302,9 @@ export function TaskDetailDialog({
               </div>
             </div>
           )}
-        </div>
+        </SectionPanel>
 
-        <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
-          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
-            Result
-          </div>
+        <SectionPanel icon={FlaskConical} title="Result">
           {!latestResult ? (
             <Button variant="outline" size="sm" className="w-fit" onClick={logResultReceived}>
               Log result received
@@ -319,7 +312,7 @@ export function TaskDetailDialog({
           ) : (
             <div className="flex flex-col gap-2.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm text-muted-foreground">Received {formatDateTime(latestResult.receivedAt)}</p>
+                <p className="text-body text-muted-foreground">Received {formatDateTime(latestResult.receivedAt)}</p>
                 <ResultStatusBadge status={latestResult.status} />
               </div>
               {latestResult.status === "RECEIVED" && (
@@ -344,16 +337,12 @@ export function TaskDetailDialog({
               )}
             </div>
           )}
-        </div>
+        </SectionPanel>
 
-        <div className="flex flex-col gap-2 rounded-lg border border-border p-3">
-          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <ClipboardList className="h-3.5 w-3.5" aria-hidden="true" />
-            Referral form
-          </div>
+        <SectionPanel icon={ClipboardList} title="Referral form">
           {referralForm ? (
-            <div className="flex flex-col gap-1.5 text-sm">
-              <p className="text-xs text-muted-foreground">Captured by {CAPTURE_SOURCE_LABELS[referralForm.capturedBy]}</p>
+            <div className="flex flex-col gap-1.5 text-body">
+              <p className="text-caption text-muted-foreground">Captured by {CAPTURE_SOURCE_LABELS[referralForm.capturedBy]}</p>
               {formFields.map(
                 (field) =>
                   referralForm.fields[field.key] && (
@@ -431,19 +420,16 @@ export function TaskDetailDialog({
               </div>
             </div>
           )}
-        </div>
+        </SectionPanel>
 
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <History className="h-3.5 w-3.5" aria-hidden="true" />
-            Activity log
-          </div>
+          <SectionLabel icon={History}>Activity log</SectionLabel>
           {log.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No changes recorded yet.</p>
+            <p className="text-body text-muted-foreground">No changes recorded yet.</p>
           ) : (
             <ul className="flex flex-col gap-2.5 border-l border-border pl-3">
               {log.map((entry) => (
-                <li key={entry.id} className="text-sm">
+                <li key={entry.id} className="text-body">
                   <p>
                     <span className="font-medium">{actorName(staffUsers, entry.changedById)}</span>{" "}
                     <span className="text-muted-foreground">

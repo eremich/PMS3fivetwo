@@ -1,13 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
 import { useAppData } from "@/lib/app-context";
 import { categoryLabel, formatDateTime, fullName, getEpisodeForTask, getPatientForEpisode } from "@/lib/patient-helpers";
 import type { AppointmentStatus } from "@/lib/types";
-import { AppointmentStatusBadge } from "@/components/status-badge";
-import { PatientAvatar } from "@/components/patient-avatar";
-import { Input } from "@/components/ui/input";
+import { AppointmentStatusBadge } from "@/components/ds/status-badge";
+import { PatientAvatar } from "@/components/ds/patient-avatar";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PageHeader } from "@/components/ds/page-header";
+import { Toolbar } from "@/components/ds/toolbar";
+import { SearchInput } from "@/components/ds/search-input";
+import { FilterChip } from "@/components/ds/filter-chip";
+import { TableCard } from "@/components/ds/table-card";
+import { EmptyState } from "@/components/ds/empty-state";
 import { cn } from "@/lib/utils";
 import { TaskDetailDialog } from "@/components/tasks/task-detail-dialog";
 
@@ -49,91 +54,63 @@ export default function AppointmentsPage() {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <div>
-        <h1 className="text-[28px] leading-9 font-bold tracking-tight text-balance">Appointments</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {currentUser.role === "CONSULTANT" ? "Appointments for your patients." : "Every scheduled appointment across the clinic."}
-        </p>
-      </div>
+      <PageHeader
+        title="Appointments"
+        description={
+          currentUser.role === "CONSULTANT" ? "Appointments for your patients." : "Every scheduled appointment across the clinic."
+        }
+      />
 
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-56 flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by patient name"
-            className="pl-9"
-          />
-        </div>
+      <Toolbar meta={`Showing ${filtered.length} of ${rows.length}`}>
+        <SearchInput value={query} onChange={setQuery} placeholder="Search by patient name" />
         {STATUS_FILTERS.map((f) => (
-          <button
-            key={f.value}
-            type="button"
-            onClick={() => setStatusFilter(f.value)}
-            className={cn(
-              "shrink-0 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
-              statusFilter === f.value
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-input text-muted-foreground hover:bg-secondary/60",
-            )}
-          >
+          <FilterChip key={f.value} active={statusFilter === f.value} onClick={() => setStatusFilter(f.value)}>
             {f.label}
-          </button>
+          </FilterChip>
         ))}
-        <span className="ml-auto text-sm text-muted-foreground">
-          Showing {filtered.length} of {rows.length}
-        </span>
-      </div>
+      </Toolbar>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            {rows.length === 0 ? "No appointments scheduled yet." : "No appointments match these filters."}
-          </p>
-        </div>
+        <EmptyState message={rows.length === 0 ? "No appointments scheduled yet." : "No appointments match these filters."} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border bg-muted/40 text-left text-xs font-medium text-muted-foreground">
-                <th className="px-4 py-2.5 font-medium">Patient</th>
-                <th className="px-4 py-2.5 font-medium">Category</th>
-                <th className="px-4 py-2.5 font-medium">Date &amp; time</th>
-                <th className="hidden px-4 py-2.5 font-medium md:table-cell">Location</th>
-                <th className="px-4 py-2.5 font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
+        <TableCard>
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Patient</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Date &amp; time</TableHead>
+                <TableHead className="hidden md:table-cell">Location</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map(({ appointment, task, patient }) => (
-                <tr
+                <TableRow
                   key={appointment.id}
                   onClick={() => {
                     setSelectedTaskId(task?.id ?? null);
                     setDialogOpen(true);
                   }}
-                  className={cn(
-                    "cursor-pointer transition-colors hover:bg-secondary/50",
-                    appointment.status === "CANCELLED" && "opacity-60",
-                  )}
+                  className={cn("cursor-pointer", appointment.status === "CANCELLED" && "opacity-60")}
                 >
-                  <td className="px-4 py-3.5 font-semibold">
+                  <TableCell className="font-semibold">
                     <div className="flex items-center gap-3">
                       {patient && <PatientAvatar name={fullName(patient)} />}
                       {patient ? fullName(patient) : "Unknown"}
                     </div>
-                  </td>
-                  <td className="px-4 py-3.5 text-muted-foreground">{task ? categoryLabel(task.category) : "—"}</td>
-                  <td className="px-4 py-3.5">{formatDateTime(appointment.scheduledAt)}</td>
-                  <td className="hidden px-4 py-3.5 text-muted-foreground md:table-cell">{appointment.location ?? "—"}</td>
-                  <td className="px-4 py-3.5">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{task ? categoryLabel(task.category) : "—"}</TableCell>
+                  <TableCell>{formatDateTime(appointment.scheduledAt)}</TableCell>
+                  <TableCell className="hidden text-muted-foreground md:table-cell">{appointment.location ?? "—"}</TableCell>
+                  <TableCell>
                     <AppointmentStatusBadge status={appointment.status} />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableCard>
       )}
 
       <TaskDetailDialog taskId={selectedTaskId} open={dialogOpen} onOpenChange={setDialogOpen} />

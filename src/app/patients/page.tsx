@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Search, UserPlus } from "lucide-react";
+import { ChevronRight, UserPlus } from "lucide-react";
 import { useAppData } from "@/lib/app-context";
 import {
   calculateAge,
@@ -16,11 +16,16 @@ import {
   formatDate,
 } from "@/lib/patient-helpers";
 import type { Patient, Priority } from "@/lib/types";
-import { PriorityBadge } from "@/components/status-badge";
-import { PatientAvatar } from "@/components/patient-avatar";
+import { PriorityBadge } from "@/components/ds/status-badge";
+import { PatientAvatar } from "@/components/ds/patient-avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PageHeader } from "@/components/ds/page-header";
+import { Toolbar } from "@/components/ds/toolbar";
+import { SearchInput } from "@/components/ds/search-input";
+import { FilterChip } from "@/components/ds/filter-chip";
+import { TableCard } from "@/components/ds/table-card";
+import { EmptyState } from "@/components/ds/empty-state";
 import { RegisterPatientDialog } from "@/components/patients/register-patient-dialog";
 
 const PRIORITY_ORDER: Record<Priority, number> = { RED_FLAG: 0, URGENT: 1, ROUTINE: 2 };
@@ -85,150 +90,140 @@ export default function PatientsPage() {
       });
   }, [rows, query, openOnly, priorityFilter]);
 
+  const emptyMessage =
+    currentUser.role === "CONSULTANT" && rows.length === 0
+      ? "No patients are assigned to you yet."
+      : query
+        ? `No patients match "${query}".`
+        : "No patients match these filters.";
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-[28px] leading-9 font-bold tracking-tight text-balance">Patients</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {currentUser.role === "CONSULTANT" ? "Patients under your care." : "Every patient across the clinic."}
-          </p>
-        </div>
-        {canCreate && (
-          <Button onClick={() => setRegisterOpen(true)}>
-            <UserPlus className="h-4 w-4" aria-hidden="true" />
-            Register patient
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title="Patients"
+        description={currentUser.role === "CONSULTANT" ? "Patients under your care." : "Every patient across the clinic."}
+        actions={
+          canCreate && (
+            <Button onClick={() => setRegisterOpen(true)}>
+              <UserPlus className="h-4 w-4" aria-hidden="true" />
+              Register patient
+            </Button>
+          )
+        }
+      />
 
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-56 flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name, MRN, date of birth, or phone"
-            className="pl-9"
-            autoFocus
-          />
-        </div>
-        <button
-          type="button"
-          onClick={() => setOpenOnly((v) => !v)}
-          className={cn(
-            "shrink-0 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
-            openOnly ? "border-primary bg-primary/10 text-primary" : "border-input text-muted-foreground hover:bg-secondary/60",
-          )}
-        >
+      <Toolbar meta={`Showing ${filtered.length} of ${rows.length}`}>
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Search by name, MRN, date of birth, or phone"
+          autoFocus
+        />
+        <FilterChip active={openOnly} onClick={() => setOpenOnly((v) => !v)}>
           Open tasks only
-        </button>
+        </FilterChip>
         {PRIORITY_FILTERS.map((f) => (
-          <button
-            key={f.value}
-            type="button"
-            onClick={() => setPriorityFilter(f.value)}
-            className={cn(
-              "shrink-0 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
-              priorityFilter === f.value
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-input text-muted-foreground hover:bg-secondary/60",
-            )}
-          >
+          <FilterChip key={f.value} active={priorityFilter === f.value} onClick={() => setPriorityFilter(f.value)}>
             {f.label}
-          </button>
+          </FilterChip>
         ))}
-        <span className="ml-auto text-sm text-muted-foreground">
-          Showing {filtered.length} of {rows.length}
-        </span>
-      </div>
+      </Toolbar>
 
       {filtered.length === 0 ? (
         <EmptyState
-          query={query}
-          canCreate={canCreate}
-          isConsultantWithNone={currentUser.role === "CONSULTANT" && rows.length === 0}
-          onRegister={() => setRegisterOpen(true)}
+          message={emptyMessage}
+          action={
+            canCreate && query ? (
+              <Button onClick={() => setRegisterOpen(true)}>
+                <UserPlus className="h-4 w-4" aria-hidden="true" />
+                Register &quot;{query}&quot;
+              </Button>
+            ) : undefined
+          }
         />
       ) : (
         <>
-          {/* Desktop / tablet table */}
-          <div className="hidden overflow-hidden rounded-xl border border-border bg-card md:block">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border bg-muted/40 text-left text-xs font-medium text-muted-foreground">
-                  <th className="px-4 py-2.5 font-medium">Patient</th>
-                  <th className="px-4 py-2.5 font-medium">Priority</th>
-                  <th className="px-4 py-2.5 font-medium">Open tasks</th>
-                  <th className="px-4 py-2.5 font-medium">Next appointment</th>
-                  <th className="px-4 py-2.5 font-medium">DOB (age)</th>
-                  <th className="hidden px-4 py-2.5 font-medium lg:table-cell">Contact</th>
-                  <th className="hidden px-4 py-2.5 font-medium lg:table-cell">Latest referral</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
+          <TableCard className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Patient</TableHead>
+                  <TableHead>Priority</TableHead>
+                  <TableHead>Open tasks</TableHead>
+                  <TableHead>Next appointment</TableHead>
+                  <TableHead>DOB (age)</TableHead>
+                  <TableHead className="hidden lg:table-cell">Contact</TableHead>
+                  <TableHead className="hidden lg:table-cell">Latest referral</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filtered.map(({ patient, openTaskCount, highestPriority, nextAppointment, latestReferral }) => (
-                  <tr
+                  <TableRow
                     key={patient.id}
                     onClick={() => router.push(`/patients/${patient.id}`)}
-                    className="cursor-pointer transition-colors hover:bg-secondary/50"
+                    className="cursor-pointer"
                   >
-                    <td className="px-4 py-3.5">
+                    <TableCell>
                       <div className="flex items-center gap-3">
                         <PatientAvatar name={fullName(patient)} />
                         <div className="min-w-0">
-                          <Link href={`/patients/${patient.id}`} className="font-semibold hover:underline" onClick={(e) => e.stopPropagation()}>
+                          <Link
+                            href={`/patients/${patient.id}`}
+                            className="font-semibold hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             {fullName(patient)}
                           </Link>
-                          <div className="text-xs text-muted-foreground">{patient.mrn}</div>
+                          <div className="text-caption whitespace-nowrap text-muted-foreground">{patient.mrn}</div>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-4 py-3.5">
+                    </TableCell>
+                    <TableCell>
                       {highestPriority ? <PriorityBadge priority={highestPriority} /> : <span className="text-muted-foreground">—</span>}
-                    </td>
-                    <td className="px-4 py-3.5 tabular-nums">{openTaskCount}</td>
-                    <td className="px-4 py-3.5">
+                    </TableCell>
+                    <TableCell className="tabular-nums">{openTaskCount}</TableCell>
+                    <TableCell>
                       {nextAppointment ? formatDate(nextAppointment.scheduledAt) : <span className="text-muted-foreground">—</span>}
-                    </td>
-                    <td className="px-4 py-3.5 text-muted-foreground">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {formatDate(patient.dateOfBirth)} ({calculateAge(patient.dateOfBirth)})
-                    </td>
-                    <td className="hidden px-4 py-3.5 text-muted-foreground lg:table-cell">{patient.phone ?? patient.email ?? "—"}</td>
-                    <td className="hidden px-4 py-3.5 text-muted-foreground lg:table-cell">
+                    </TableCell>
+                    <TableCell className="hidden text-muted-foreground lg:table-cell">{patient.phone ?? patient.email ?? "—"}</TableCell>
+                    <TableCell className="hidden text-muted-foreground lg:table-cell">
                       {latestReferral ? formatDate(latestReferral) : "—"}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </TableCard>
 
-          {/* Mobile stacked list */}
-          <ul className="flex flex-col divide-y divide-border rounded-xl border border-border bg-card md:hidden">
-            {filtered.map(({ patient, openTaskCount, highestPriority }) => (
-              <li key={patient.id}>
-                <Link
-                  href={`/patients/${patient.id}`}
-                  className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-secondary/50"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <PatientAvatar name={fullName(patient)} />
-                    <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-sm font-semibold">{fullName(patient)}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {patient.mrn} · {openTaskCount} open
-                    </span>
+          <TableCard className="md:hidden">
+            <ul className="divide-y divide-border">
+              {filtered.map(({ patient, openTaskCount, highestPriority }) => (
+                <li key={patient.id}>
+                  <Link
+                    href={`/patients/${patient.id}`}
+                    className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-secondary/50"
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <PatientAvatar name={fullName(patient)} />
+                      <div className="flex min-w-0 flex-col">
+                        <span className="truncate font-semibold">{fullName(patient)}</span>
+                        <span className="text-caption text-muted-foreground">
+                          {patient.mrn} · {openTaskCount} open
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    {highestPriority && <PriorityBadge priority={highestPriority} />}
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    <div className="flex shrink-0 items-center gap-2">
+                      {highestPriority && <PriorityBadge priority={highestPriority} />}
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </TableCard>
         </>
       )}
 
@@ -238,39 +233,6 @@ export default function PatientsPage() {
         initialName={query}
         onRegistered={(patient) => router.push(`/patients/${patient.id}`)}
       />
-    </div>
-  );
-}
-
-function EmptyState({
-  query,
-  canCreate,
-  isConsultantWithNone,
-  onRegister,
-}: {
-  query: string;
-  canCreate: boolean;
-  isConsultantWithNone: boolean;
-  onRegister: () => void;
-}) {
-  if (isConsultantWithNone) {
-    return (
-      <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
-        <p className="text-sm text-muted-foreground">No patients are assigned to you yet.</p>
-      </div>
-    );
-  }
-  return (
-    <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
-      <p className="text-sm text-muted-foreground">
-        {query ? `No patients match "${query}".` : "No patients match these filters."}
-      </p>
-      {canCreate && query && (
-        <Button className="mt-4" onClick={onRegister}>
-          <UserPlus className="h-4 w-4" aria-hidden="true" />
-          Register &quot;{query}&quot;
-        </Button>
-      )}
     </div>
   );
 }

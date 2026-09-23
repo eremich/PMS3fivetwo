@@ -6,7 +6,8 @@ import type { PaymentType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
+import { RadioCard } from "@/components/ds/radio-card";
 import {
   Dialog,
   DialogContent,
@@ -77,14 +78,9 @@ export function BillingDialog({ open, onOpenChange, episodeOfCareId }: BillingDi
             <Label>Payment</Label>
             <RadioGroup value={paymentType} onValueChange={(v) => setPaymentType(v as PaymentType)} className="flex flex-col gap-2">
               {PAYMENT_TYPES.map((p) => (
-                <label
-                  key={p.value}
-                  htmlFor={`payment-${p.value}`}
-                  className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-input px-3 py-2 transition-colors duration-150 ease-out has-data-[checked]:border-primary has-data-[checked]:bg-primary/5"
-                >
-                  <RadioGroupItem id={`payment-${p.value}`} value={p.value} />
-                  <span className="text-sm">{p.label}</span>
-                </label>
+                <RadioCard key={p.value} id={`payment-${p.value}`} value={p.value}>
+                  <span className="text-body">{p.label}</span>
+                </RadioCard>
               ))}
             </RadioGroup>
           </div>
