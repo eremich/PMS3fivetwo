@@ -29,7 +29,7 @@ export function ThemeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label="Colour theme"
-        className="relative flex size-control-md items-center justify-center rounded-control border border-line bg-surface text-fg-secondary transition-colors duration-150 ease-out hover:bg-surface-hover hover:text-fg focus-ring"
+        className="relative flex size-control-md items-center justify-center rounded-control border border-line bg-surface text-fg-secondary transition-colors hover:bg-surface-hover hover:text-fg focus-ring"
       >
         <Sun className="size-4 scale-100 dark:scale-0" aria-hidden="true" />
         <Moon className="absolute size-4 scale-0 dark:scale-100" aria-hidden="true" />

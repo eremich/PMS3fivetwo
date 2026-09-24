@@ -64,3 +64,19 @@ Each entry follows this pattern:
   check dist-tags (or changelog) for a stable vs. rc/next split before
   installing, and prefer pinning to the last stable tag unless the user
   explicitly wants bleeding-edge. Related: [[project-scope-simplification]].
+
+### [2026-09-24] Class merger read our type tokens as colours
+- **What happened**: After renaming `text-sm` to `text-body` in the button sizes, buttons showed black text on blue and red backgrounds. The class merger (`cn`) did not know `text-body` / `text-caption` were font sizes, treated them as text colours, and dropped the real colour when both were present.
+- **Why**: Custom Tailwind tokens are invisible to the merge library unless it is configured; the code looked correct, only the rendered result was wrong.
+- **Rule**: When adding custom font-size / colour / radius names, register them in `src/lib/utils.ts` (`createCn`) in the same change, and route every component through that one `cn`. After renaming classes, verify computed styles in the browser, not just the source.
+
+### [2026-09-24] Installed Storybook before the tokens were applied to the site
+- **What happened**: The user wanted the token system applied correctly on the site first and Storybook after it. Asked in a different order, I started the Storybook install mid-refactor and had to revert it.
+- **Why**: I read "do it in Storybook" as an instruction to install now instead of confirming the sequence.
+- **Rule**: When a request could mean two orders of work (tool first vs. foundation first), state the order in one line and confirm before touching the project. Foundations (tokens, naming) before tooling that documents them.
+
+### [2026-09-24] Variants lived in component strings, not in the design system
+- **What happened**: Button variants, hover and pressed colours existed only as class strings inside `button.tsx`, inherited from the shadcn template. The user expected primary / secondary and every state to be defined in CSS.
+- **Why**: I styled components directly with template defaults instead of defining tokens first.
+- **Rule**: Design-system order is tokens first (primitive, semantic, component), then components that only compose them. A new variant or state means new component tokens in `src/styles/tokens/component.css`, a story, and a docs row in the same change.
+

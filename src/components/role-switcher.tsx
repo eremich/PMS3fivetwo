@@ -34,7 +34,7 @@ export function RoleSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-control py-1 pr-2 pl-1 text-left transition-colors duration-150 ease-out hover:bg-surface-hover focus-ring">
+      <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-control py-1 pr-2 pl-1 text-left transition-colors hover:bg-surface-hover focus-ring">
         <Avatar className="h-9 w-9 shrink-0">
           <AvatarFallback className="bg-primary text-fg-inverse text-caption font-medium">
             {initials(currentUser.name)}

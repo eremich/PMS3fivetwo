@@ -60,11 +60,13 @@ COLOR = {
 DARK_ONLY_DELETE = re.compile(r"^(bg|text|border|ring)-(destructive|input|accent|primary|black|muted-foreground|foreground)(/\d+)?$")
 
 RADIUS = {"sm": "control", "md": "control", "lg": "control", "xl": "surface", "2xl": "panel"}
+SHADOW = {"xs": "raised", "sm": "raised", "md": "overlay", "lg": "overlay", "xl": "overlay"}
 TEXT = {"xs": "caption", "sm": "body", "base": "body-lg", "lg": "h4", "xl": "h3", "2xl": "h2", "3xl": "h1"}
 
 VARIANTS = r"((?:[\w\[\]\-*&>=():/.%]+:)*)"
 COLOR_RE = re.compile(r"(?<=[\s\"'`({])" + VARIANTS + r"(bg|text|border|ring|divide)-([a-z-]+(?:/\d+)?)(?![\w/-])")
 RADIUS_RE = re.compile(r"(?<=[\s\"'`({])" + VARIANTS + r"rounded((?:-[trblse]{1,2})?)-(sm|md|lg|xl|2xl)(?![\w-])")
+SHADOW_RE = re.compile(r"(?<=[\s\"'`({])" + VARIANTS + r"shadow-(xs|sm|md|lg|xl)(?![\w-])")
 TEXT_RE = re.compile(r"(?<=[\s\"'`({])" + VARIANTS + r"text-(xs|sm|base|lg|xl|2xl|3xl)(?![\w-])")
 
 LEGACY = re.compile(
@@ -76,6 +78,7 @@ LEGACY = re.compile(
     r"(?![\w-])"
     r"|(?<=[\s\"'`({:])(?:[\w\[\]\-*&>=():/.%]+:)*rounded(?:-[trblse]{1,2})?-(?:sm|md|lg|xl|2xl|3xl|4xl)(?![\w-])"
     r"|(?<=[\s\"'`({:])(?:[\w\[\]\-*&>=():/.%]+:)*text-(?:xs|sm|base|lg|xl|2xl|3xl)(?![\w-])"
+    r"|(?<=[\s\"'`({:])(?:[\w\[\]\-*&>=():/.%]+:)*shadow-(?:xs|sm|md|lg|xl)(?![\w-])"
 )
 
 
@@ -98,6 +101,7 @@ def rewrite(text):
     text = COLOR_RE.sub(color, text)
     text = RADIUS_RE.sub(radius, text)
     text = TEXT_RE.sub(size, text)
+    text = SHADOW_RE.sub(lambda m: f"{m.group(1)}shadow-{SHADOW[m.group(2)]}", text)
     # remove deleted tokens together with one adjacent space
     text = re.sub(r" ?\0", "", text)
     return text

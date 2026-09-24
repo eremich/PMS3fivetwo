@@ -43,7 +43,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t bg-subtle font-medium [&>tr]:last:border-b-0",
+        "border-t bg-table-header font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -81,7 +81,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-11 bg-subtle px-4 text-left align-middle text-caption font-medium whitespace-nowrap text-fg-secondary [&:has([role=checkbox])]:pr-0",
+        "h-11 bg-table-header px-4 text-left align-middle text-caption font-medium whitespace-nowrap text-table-header-text [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}

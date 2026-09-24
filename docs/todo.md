@@ -92,6 +92,17 @@ portfolio site.
 - [x] `BillingStatusBadge` on the shared `Badge` primitive; "Admin only" guard on
       direct URL access for other roles (matches the "Not in your clinic" pattern)
 
+### Design system ✅ (2026-09-24)
+- [x] Interaction states unified (hover / focus / pressed / disabled / pointer cursor), keyboard-reachable table rows
+- [x] Dark theme with toggle (Light / Dark / System), no flash on load, SVG logos with dark variants
+- [x] Three-tier tokens in `src/styles/` (primitives, semantic, component) + Tailwind bridge; default palette, radii and type sizes removed
+- [x] Primary / secondary roles, all button variants with states, field / menu / chip / choice card / table header / dialog tokens, elevation and motion tokens
+- [x] `scripts/codemod-tokens.py` and `scripts/check-tokens.py` (run before committing)
+- [x] Storybook (`npm run storybook`): Foundations read the token files directly (colours, type, radius, control heights, elevation, motion, interaction-state matrix); stories for every ui/ds component, logo and theme toggle
+- [ ] Field borders reach 3:1 contrast (currently ~1.3:1, shared by both themes)
+- [ ] Publish Storybook (Vercel / Chromatic) for the portfolio case study
+- [ ] README rewritten as the case study (current README is the designer kit's)
+
 ### Phase 7 — Polish
 - [ ] Accessibility audit pass (WCAG 2.1 AA)
 - [ ] Final design-reviewer anti-slop pass across all screens

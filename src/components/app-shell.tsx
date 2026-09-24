@@ -53,9 +53,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-surface border px-3.5 py-2.5 text-body transition-colors duration-150 ease-out focus-ring",
+                  "flex items-center gap-3 rounded-surface border px-3.5 py-2.5 text-body transition-colors focus-ring",
                   active
-                    ? "border-line bg-nav-active font-semibold text-fg shadow-xs"
+                    ? "border-line bg-nav-active font-semibold text-fg shadow-raised"
                     : "border-transparent font-medium text-fg-secondary hover:bg-nav-hover hover:text-fg",
                 )}
               >
@@ -68,7 +68,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col md:py-3 md:pr-3">
-        <div className="flex min-h-0 flex-1 flex-col bg-surface md:rounded-panel md:border md:border-line md:shadow-xs">
+        <div className="flex min-h-0 flex-1 flex-col bg-surface md:rounded-panel md:border md:border-line md:shadow-raised">
           <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-line px-4 md:h-[72px] md:px-8">
             <Link href="/" aria-label="New Malden Diagnostic Centre — home" className="md:hidden">
               <Logo className="h-8" />

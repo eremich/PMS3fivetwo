@@ -61,4 +61,37 @@
   /* Menu / select item */
   --menu-item-bg-hover: var(--bg-surface-hover);
   --menu-item-text: var(--text-primary);
+
+  /* Filter chip */
+  --chip-bg: var(--bg-surface);
+  --chip-bg-hover: var(--bg-surface-hover);
+  --chip-text: var(--text-secondary);
+  --chip-text-hover: var(--text-primary);
+  --chip-border: var(--border-strong);
+  --chip-bg-selected: var(--action-primary-subtle);
+  --chip-text-selected: var(--text-link);
+  --chip-border-selected: var(--action-primary-default);
+
+  /* Choice card (radio card) */
+  --choice-bg: var(--bg-surface);
+  --choice-bg-hover: var(--bg-surface-hover);
+  --choice-border: var(--border-strong);
+  --choice-bg-selected: var(--action-primary-subtle);
+  --choice-bg-selected-hover: var(--action-primary-subtle-hover);
+  --choice-border-selected: var(--action-primary-default);
+
+  /* Table header */
+  --table-header-bg: var(--bg-subtle);
+  --table-header-text: var(--text-secondary);
+
+  /* Dialog and menu surfaces */
+  --dialog-bg: var(--bg-overlay);
+  --dialog-border: var(--border-default);
+  --menu-bg: var(--bg-overlay);
+  --menu-border: var(--border-default);
+
+  /* Motion: one speed and easing for every colour/background transition */
+  --motion-duration-interactive: 150ms;
+  --motion-duration-overlay: 100ms;
+  --motion-easing-standard: ease-out;
 }

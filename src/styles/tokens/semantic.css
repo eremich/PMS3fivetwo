@@ -18,6 +18,10 @@
   --bg-overlay: var(--primitive-neutral-0);
   --overlay-scrim: color-mix(in oklch, var(--primitive-black) 10%, transparent);
 
+  /* Elevation */
+  --elevation-raised: 0 1px 2px 0 color-mix(in oklch, var(--primitive-black) 5%, transparent);
+  --elevation-overlay: 0 10px 15px -3px color-mix(in oklch, var(--primitive-black) 10%, transparent), 0 4px 6px -4px color-mix(in oklch, var(--primitive-black) 10%, transparent);
+
   /* Text */
   --text-primary: var(--primitive-neutral-900);
   --text-secondary: var(--primitive-neutral-500);
@@ -79,6 +83,9 @@
   --bg-subtle: var(--primitive-neutral-800);
   --bg-overlay: var(--primitive-neutral-850);
   --overlay-scrim: color-mix(in oklch, var(--primitive-black) 50%, transparent);
+
+  --elevation-raised: 0 1px 2px 0 color-mix(in oklch, var(--primitive-black) 30%, transparent);
+  --elevation-overlay: 0 10px 15px -3px color-mix(in oklch, var(--primitive-black) 45%, transparent), 0 4px 6px -4px color-mix(in oklch, var(--primitive-black) 45%, transparent);
 
   --text-primary: var(--primitive-neutral-50);
   --text-secondary: var(--primitive-neutral-400);

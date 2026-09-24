@@ -5,7 +5,7 @@ export function RadioCard({ id, value, children }: { id: string; value: string; 
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-center gap-2.5 rounded-control border border-line-strong bg-surface px-3 py-2.5 transition-colors duration-150 ease-out hover:bg-surface-hover has-data-[checked]:border-primary has-data-[checked]:bg-primary-subtle has-data-[checked]:hover:bg-primary-subtle-hover"
+      className="flex cursor-pointer items-center gap-2.5 rounded-control border border-choice-border bg-choice px-3 py-2.5 transition-colors hover:bg-choice-hover has-data-[checked]:border-choice-selected-border has-data-[checked]:bg-choice-selected has-data-[checked]:hover:bg-choice-selected-hover"
     >
       <RadioGroupItem id={id} value={value} />
       {children}

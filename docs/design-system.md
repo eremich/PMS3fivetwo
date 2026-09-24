@@ -1,6 +1,6 @@
 # Design system
 
-Code is the source of truth. Token files live in `src/styles/`; Storybook (next step) renders them
+Code is the source of truth. Token files live in `src/styles/`; Storybook (`npm run storybook`) renders them
 directly from those files, so docs and code cannot drift.
 
 ## Architecture: three tiers
@@ -9,7 +9,7 @@ directly from those files, so docs and code cannot drift.
 src/styles/
   tokens/primitives.css   Tier 1  raw palette, no meaning, no themes
   tokens/semantic.css     Tier 2  purpose-named, resolved per theme (:root = light, .dark = dark)
-  tokens/component.css    Tier 3  tuning knobs per component (button, field, menu, nav, control heights)
+  tokens/component.css    Tier 3  tuning knobs per component (button, field, chip, choice card, table header, dialog, menu, nav, control heights, motion)
   theme.css               bridge: exposes tiers 2-3 as Tailwind utilities, removes Tailwind defaults
 src/app/globals.css       imports the above + base rules, status pills, interaction utilities
 ```
@@ -29,7 +29,7 @@ Rules:
 
 Semantic and component variables: `--{category}-{purpose}[-{state}]`, lowercase kebab-case.
 
-- Categories: `bg`, `text`, `border`, `action`, `destructive`, `success`, `warning`, `info`, `neutral`, `overlay`; components: `button`, `field`, `menu-item`, `nav-item`.
+- Categories: `bg`, `text`, `border`, `action`, `destructive`, `success`, `warning`, `info`, `neutral`, `overlay`; components: `button`, `field`, `chip`, `choice`, `table`, `dialog`, `menu`, `menu-item`, `nav-item`.
 - State is always the last word: `default`, `hover`, `pressed`, `subtle`, `subtle-hover`.
 - Names describe purpose, never appearance (`destructive-hover`, not `red-hover`).
 - Feedback groups share one shape: `default` (solid/icon), `subtle` (soft fill), `text` (on subtle), `border`. Only `destructive` has `subtle-hover` (only interactive feedback).
@@ -50,7 +50,13 @@ Tailwind adds `bg-`, `text-`, `border-` itself, so the category word is dropped 
 | `--neutral-{subtle,text,border}` | `bg-neutral-subtle` `text-neutral-text` `border-neutral-border` |
 | `--button-{variant}-{bg,bg-hover,bg-pressed,text,border}` | `bg-button-primary` `hover:bg-button-primary-hover` `text-button-primary-text` ... |
 | `--field-*` | `bg-field` `text-field-text` `border-field-border` `border-field-border-hover` `border-field-border-focus` `border-field-border-invalid` `ring-field-ring-invalid` `bg-field-disabled` `placeholder:text-field-placeholder` |
+| `--chip-*` | `bg-chip` `bg-chip-hover` `text-chip-text` `text-chip-text-hover` `border-chip-border` `bg-chip-selected` `text-chip-selected-text` `border-chip-selected-border` |
+| `--choice-*` (radio card) | `bg-choice` `bg-choice-hover` `border-choice-border` `bg-choice-selected` `bg-choice-selected-hover` `border-choice-selected-border` |
+| `--table-header-*` | `bg-table-header` `text-table-header-text` |
+| `--dialog-*`, `--menu-*` | `bg-dialog` `ring-dialog-border` `bg-menu` `ring-menu-border` |
 | `--menu-item-*`, `--nav-item-*` | `bg-menu-item-hover` `text-menu-item-text` `bg-nav-hover` `bg-nav-active` |
+| `--elevation-{raised,overlay}` | `shadow-raised` (active nav item, app panel), `shadow-overlay` (menus, select lists) |
+| `--motion-duration-interactive` / `-overlay`, `--motion-easing-standard` | default for every `transition-*` (150ms ease-out); overlays 100ms via `duration-(--motion-duration-overlay)` |
 | `--control-height-{xs,sm,md,lg}` | `h-control-md` `size-control-md` ... |
 
 ### Radius, type, spacing
@@ -103,8 +109,8 @@ Non-clickable rows and cards have no hover fill, so hover always means "you can 
 | Button primary / secondary / destructive | variant `-hover` | `focus-ring` | variant `-pressed` | 50%, not-allowed | n/a |
 | Button outline / ghost | variant `-hover` | `focus-ring` | variant `-pressed` | 50%, not-allowed | `aria-expanded` = hover fill |
 | Input / Textarea / Select trigger | `field-border-hover` | `focus-ring-inset` + `field-border-focus` | n/a | 50%, `field-disabled` | n/a |
-| FilterChip | `surface-hover` | `focus-ring` | down 1px | n/a | `aria-pressed`: `primary-subtle` |
-| RadioCard | `surface-hover` | radio has `focus-ring` | n/a | n/a | `data-checked`: `primary-subtle` |
+| FilterChip | `chip-hover` | `focus-ring` | down 1px | 50% | `aria-pressed`: `chip-selected` |
+| RadioCard | `choice-hover` | radio has `focus-ring` | n/a | n/a | `data-checked`: `choice-selected` |
 | Menu / Select item | `menu-item-hover` (also keyboard highlight) | highlight | n/a | 50%, not-allowed | check mark |
 | Sidebar / mobile nav link | `nav-hover` / `surface-hover` | `focus-ring` | n/a | n/a | `aria-current="page"`: `nav-active` |
 | Clickable table row | `surface-hover` | `focus-ring-inset`, Tab reachable, Enter/Space opens | `surface-pressed` | n/a | n/a |
@@ -154,9 +160,16 @@ python scripts/codemod-tokens.py --check   # no legacy shadcn / palette / size c
 python scripts/check-tokens.py             # every colour class resolves to a token
 ```
 
-## Storybook notes
+## Storybook
 
-- Token pages (colours per theme, type, radius, control heights, states) read `src/styles/**` directly.
-- One story per `ds/` component plus `ui/` controls in every variant, size and state (Storybook `pseudo-states` addon for hover/focus/active).
-- Theme toolbar via `withThemeByClassName` toggling `dark`; check every story in both themes.
-- `RadioCard` needs a `RadioGroup` decorator; badges need none.
+Run: `npm run storybook` (http://localhost:6006). Build: `npm run build-storybook`.
+
+Storybook is the visual reference for the design system. Values are never copied into it:
+
+- **Foundations** (`src/design-system/`): Colors (semantic, primitives, component tokens) is parsed from `src/styles/tokens/*.css` and `theme.css`; Typography, Radius and Control heights are read from `theme.css` / `component.css`. Change a token in the CSS and these pages change.
+- **Foundations** also has Shape and type (Typography, Radius, Control heights, Elevation, Motion) and **Interaction states**: a matrix of every interactive component in default / hover / focus / pressed / disabled, forced with pseudo-states so all states are visible at once.
+- **Components** (`*.stories.tsx` next to each component): Button (every variant plus hover / focus / pressed / disabled), Input, Textarea, Label, Select, Radio card, Dropdown menu, Dialog, Table, Avatar, Status badges, Layout blocks (page header, toolbar with filter chips, stat tiles, empty state, section panel), Patient avatar, Theme toggle. **Brand**: Logo (compact and full).
+- Toolbar: theme switcher (Light / Dark, toggles the `dark` class, addon-themes); hover/focus/active states via `storybook-addon-pseudo-states` (`parameters.pseudo`); accessibility panel via addon-a11y; addon-mcp exposes components to AI tools.
+- Setup: `.storybook/main.ts`, `.storybook/preview.tsx` (imports `globals.css`, loads the same fonts as the app).
+- New component or new variant/state: add or extend its story in the same change; check it in both themes.
+- `RadioCard` needs a `RadioGroup` wrapper; badges need none.

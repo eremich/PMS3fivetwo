@@ -12,6 +12,7 @@
   --color-*: initial;
   --radius-*: initial;
   --text-*: initial;
+  --shadow-*: initial;
 }
 
 @theme inline {
@@ -105,6 +106,26 @@
   --color-field-border-invalid: var(--field-border-invalid);
   --color-field-ring-invalid: var(--field-ring-invalid);
   --color-field-disabled: var(--field-bg-disabled);
+  --color-chip: var(--chip-bg);
+  --color-chip-hover: var(--chip-bg-hover);
+  --color-chip-text: var(--chip-text);
+  --color-chip-text-hover: var(--chip-text-hover);
+  --color-chip-border: var(--chip-border);
+  --color-chip-selected: var(--chip-bg-selected);
+  --color-chip-selected-text: var(--chip-text-selected);
+  --color-chip-selected-border: var(--chip-border-selected);
+  --color-choice: var(--choice-bg);
+  --color-choice-hover: var(--choice-bg-hover);
+  --color-choice-border: var(--choice-border);
+  --color-choice-selected: var(--choice-bg-selected);
+  --color-choice-selected-hover: var(--choice-bg-selected-hover);
+  --color-choice-selected-border: var(--choice-border-selected);
+  --color-table-header: var(--table-header-bg);
+  --color-table-header-text: var(--table-header-text);
+  --color-dialog: var(--dialog-bg);
+  --color-dialog-border: var(--dialog-border);
+  --color-menu: var(--menu-bg);
+  --color-menu-border: var(--menu-border);
   --color-menu-item-hover: var(--menu-item-bg-hover);
   --color-menu-item-text: var(--menu-item-text);
   --color-nav-hover: var(--nav-item-bg-hover);
@@ -118,6 +139,12 @@
   --radius-control: 0.5rem;
   --radius-surface: 0.75rem;
   --radius-panel: 1rem;
+
+  /* Elevation and motion */
+  --shadow-raised: var(--elevation-raised);
+  --shadow-overlay: var(--elevation-overlay);
+  --default-transition-duration: var(--motion-duration-interactive);
+  --default-transition-timing-function: var(--motion-easing-standard);
 
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);

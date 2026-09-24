@@ -93,7 +93,7 @@
 /* Clickable row / card: hover, pressed and keyboard focus in one place */
 @utility interactive-row {
   cursor: pointer;
-  transition: background-color 150ms ease-out;
+  transition: background-color var(--motion-duration-interactive) var(--motion-easing-standard);
   &:hover {
     background-color: var(--bg-surface-hover);
   }
