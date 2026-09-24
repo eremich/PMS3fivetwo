@@ -161,7 +161,7 @@ export default function PatientsPage() {
                   <TableRow
                     key={patient.id}
                     onClick={() => router.push(`/patients/${patient.id}`)}
-                    className="cursor-pointer"
+                    tabIndex={-1}
                   >
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -204,7 +204,7 @@ export default function PatientsPage() {
                 <li key={patient.id}>
                   <Link
                     href={`/patients/${patient.id}`}
-                    className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-secondary/50"
+                    className="flex items-center justify-between gap-3 px-4 py-3.5 interactive-row"
                   >
                     <div className="flex min-w-0 items-center gap-3">
                       <PatientAvatar name={fullName(patient)} />

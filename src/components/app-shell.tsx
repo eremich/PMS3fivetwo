@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -12,7 +11,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppData } from "@/lib/app-context";
+import { Logo } from "@/components/logo";
 import { RoleSwitcher } from "@/components/role-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { Role } from "@/lib/types";
 
 const navItems: { href: string; label: string; icon: typeof LayoutDashboard; roles: Role[] }[] = [
@@ -40,7 +41,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-dvh w-full">
       <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col px-4 py-6 md:flex">
         <Link href="/" aria-label="New Malden Diagnostic Centre — home" className="mb-8 block px-2">
-          <Image src="/logo.png" alt="New Malden Diagnostic Centre" width={762} height={185} priority className="h-12 w-auto" />
+          <Logo className="h-10" />
         </Link>
         <nav aria-label="Primary" className="flex flex-col gap-1">
           {items.map((item) => {
@@ -52,7 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-body transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-body transition-colors duration-150 ease-out focus-ring",
                   active
                     ? "border-border bg-card font-semibold text-foreground shadow-xs"
                     : "border-transparent font-medium text-sidebar-foreground hover:bg-card/70 hover:text-foreground",
@@ -70,13 +71,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex min-h-0 flex-1 flex-col bg-card md:rounded-2xl md:border md:border-border md:shadow-xs">
           <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border px-4 md:h-[72px] md:px-8">
             <Link href="/" aria-label="New Malden Diagnostic Centre — home" className="md:hidden">
-              <Image src="/logo.png" alt="New Malden Diagnostic Centre" width={762} height={185} priority className="h-9 w-auto" />
+              <Logo className="h-8" />
             </Link>
             <p className="hidden text-body text-muted-foreground md:block">{todayLabel()}</p>
-            <RoleSwitcher />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <RoleSwitcher />
+            </div>
           </header>
 
-          <nav aria-label="Primary" className="flex gap-1 overflow-x-auto border-b border-border px-3 py-2 md:hidden">
+          <nav aria-label="Primary" className="flex gap-1 overflow-x-auto border-b border-border px-3 py-2 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {items.map((item) => {
               const active = isActive(pathname, item.href);
               return (
@@ -85,8 +89,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "shrink-0 rounded-lg px-3.5 py-1.5 text-body font-medium transition-colors",
-                    active ? "bg-secondary font-semibold text-foreground" : "text-muted-foreground hover:bg-secondary/60",
+                    "shrink-0 rounded-lg px-3.5 py-1.5 text-body font-medium transition-colors focus-ring",
+                    active ? "bg-secondary font-semibold text-foreground" : "text-muted-foreground hover:bg-accent",
                   )}
                 >
                   {item.label}

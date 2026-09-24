@@ -81,7 +81,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/tasks"
-            className="flex items-center gap-1 text-body font-semibold text-primary transition-colors hover:opacity-80"
+            className="flex items-center gap-1 text-body font-semibold text-primary-text transition-colors hover:opacity-80"
           >
             View all tasks
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -97,7 +97,7 @@ export default function DashboardPage() {
                 <li key={task.id}>
                   <Link
                     href={`/tasks?highlight=${task.id}`}
-                    className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-secondary/60"
+                    className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 interactive-row"
                   >
                     <div className="flex min-w-0 items-center gap-3">
                       <PatientAvatar name={name} />

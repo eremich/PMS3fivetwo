@@ -142,7 +142,7 @@ export function TasksClient() {
                 <TableRow
                   key={task.id}
                   onClick={() => openTask(task.id)}
-                  className={cn("cursor-pointer", !isTaskOpen(task.status) && "opacity-60")}
+                  className={cn(!isTaskOpen(task.status) && "opacity-60")}
                 >
                   <TableCell className="font-semibold">
                     <div className="flex items-center gap-3">

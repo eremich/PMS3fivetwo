@@ -92,7 +92,7 @@ export default function AppointmentsPage() {
                     setSelectedTaskId(task?.id ?? null);
                     setDialogOpen(true);
                   }}
-                  className={cn("cursor-pointer", appointment.status === "CANCELLED" && "opacity-60")}
+                  className={cn(appointment.status === "CANCELLED" && "opacity-60")}
                 >
                   <TableCell className="font-semibold">
                     <div className="flex items-center gap-3">

@@ -152,7 +152,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
                       <li key={task.id} className={!isTaskOpen(task.status) ? "opacity-60" : undefined}>
                         <Link
                           href={`/tasks?highlight=${task.id}`}
-                          className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-secondary/50"
+                          className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 interactive-row"
                         >
                           <div className="flex min-w-0 flex-col">
                             <span className="text-body font-medium">{categoryLabel(task.category)}</span>

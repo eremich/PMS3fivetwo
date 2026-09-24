@@ -51,12 +51,24 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   )
 }
 
-function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+function TableRow({ className, onClick, onKeyDown, tabIndex, ...props }: React.ComponentProps<"tr">) {
+  const interactive = Boolean(onClick)
   return (
     <tr
       data-slot="table-row"
+      onClick={onClick}
+      // Clickable rows are keyboard-reachable; pass tabIndex={-1} when the row already holds its own link
+      tabIndex={tabIndex ?? (interactive ? 0 : undefined)}
+      onKeyDown={(e) => {
+        onKeyDown?.(e)
+        if (interactive && e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault()
+          e.currentTarget.click()
+        }
+      }}
       className={cn(
-        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
+        "border-b has-aria-expanded:bg-accent data-[state=selected]:bg-muted",
+        interactive && "interactive-row",
         className
       )}
       {...props}
