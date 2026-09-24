@@ -42,6 +42,12 @@ interface NewEpisodeInput {
   priority: Priority;
 }
 
+interface NewTaskInput {
+  episodeOfCareId: string;
+  category: ReferralCategory;
+  priority: Priority;
+}
+
 interface ScheduleAppointmentInput {
   bookingTaskId: string;
   scheduledAt: string;
@@ -76,6 +82,7 @@ interface AppDataState {
   updateTaskStatus: (taskId: string, status: TaskStatus, actorId: string, details?: string) => void;
   addPatient: (input: NewPatientInput) => Patient;
   addEpisode: (input: NewEpisodeInput) => EpisodeOfCare;
+  addTask: (input: NewTaskInput, actorId: string, details?: string) => BookingTask;
   scheduleAppointment: (input: ScheduleAppointmentInput, actorId: string) => Appointment;
   updateAppointmentStatus: (appointmentId: string, status: Appointment["status"], actorId: string) => void;
   addServiceRequestForm: (input: AddServiceRequestFormInput, actorId: string) => ServiceRequestForm;
@@ -150,6 +157,23 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       },
     ]);
     return episode;
+  };
+
+  // A further test or appointment inside an existing episode (the flow's "Yes → Create Task" loop).
+  const addTask = (input: NewTaskInput, actorId: string, details?: string): BookingTask => {
+    const now = new Date().toISOString();
+    const task: BookingTask = {
+      id: `t-${crypto.randomUUID()}`,
+      episodeOfCareId: input.episodeOfCareId,
+      category: input.category,
+      status: "PENDING",
+      priority: input.priority,
+      createdAt: now,
+      updatedAt: now,
+    };
+    setBookingTasks((prev) => [...prev, task]);
+    logActivity(task.id, "TASK_CREATED", actorId, details);
+    return task;
   };
 
   const scheduleAppointment = (input: ScheduleAppointmentInput, actorId: string): Appointment => {
@@ -252,6 +276,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       updateTaskStatus,
       addPatient,
       addEpisode,
+      addTask,
       scheduleAppointment,
       updateAppointmentStatus,
       addServiceRequestForm,
