@@ -2,6 +2,7 @@ import { useId } from "react";
 import type { ComponentProps } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "aria-invalid" | "aria-describedby"> & {
@@ -10,6 +11,9 @@ type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "aria-invalid" |
   showLabel?: boolean;
   description?: string;
   error?: string;
+  /** Renders a growing textarea instead of a single-line input. */
+  multiline?: boolean;
+  rows?: number;
 };
 
 /**
@@ -21,6 +25,8 @@ export function TextField({
   showLabel = true,
   description,
   error,
+  multiline,
+  rows,
   required,
   disabled,
   className,
@@ -41,14 +47,26 @@ export function TextField({
           </span>
         )}
       </Label>
-      <Input
-        id={id}
-        required={required}
-        disabled={disabled}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy}
-        {...props}
-      />
+      {multiline ? (
+        <Textarea
+          id={id}
+          rows={rows}
+          required={required}
+          disabled={disabled}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+          {...(props as ComponentProps<typeof Textarea>)}
+        />
+      ) : (
+        <Input
+          id={id}
+          required={required}
+          disabled={disabled}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+          {...props}
+        />
+      )}
       {description && !error && (
         <p id={descriptionId} className="text-caption text-fg-secondary">
           {description}

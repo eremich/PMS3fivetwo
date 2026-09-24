@@ -1,0 +1,65 @@
+import { Canvas, Controls, Meta } from "@storybook/addon-docs/blocks";
+import * as AlertStories from "./alert.stories";
+import { Alert } from "./alert";
+import { TextField } from "./text-field";
+import { DoDont, DoDontRow, Lead } from "../../design-system/docs-blocks";
+
+<Meta of={AlertStories} />
+
+# Alert
+
+<Lead>A message about a whole form or page: a possible duplicate, a failed save, a confirmation. For an error on a single field, use the error of Text field instead.</Lead>
+
+<Canvas of={AlertStories.Info} />
+
+<Controls of={AlertStories.Info} />
+
+## Tones
+
+Each tone has its own colour, icon and announcement. Colour is never the only signal: the icon and the text carry the meaning too.
+
+<Canvas of={AlertStories.AllTones} />
+
+| Tone | Use for | Announced |
+| --- | --- | --- |
+| Info | Neutral context the user may want (“Reminders are sent two days before.”) | Politely (`role="status"`) |
+| Success | Confirmation of something that just worked | Politely (`role="status"`) |
+| Warning | Something to check before continuing, without blocking (possible duplicate patient) | Immediately (`role="alert"`) |
+| Danger | The action failed and the user must fix something | Immediately (`role="alert"`) |
+
+## When to use
+
+<DoDontRow>
+  <DoDont tone="do" title="Field problem next to the field; form-level message in an Alert.">
+    <div className="flex w-56 flex-col gap-3">
+      <TextField label="Amount (£)" defaultValue="0" error="Enter an amount greater than £0." />
+    </div>
+  </DoDont>
+  <DoDont tone="dont" title="One generic banner for every field: the user has to guess which one is wrong.">
+    <div className="w-56">
+      <Alert tone="danger">Some fields are invalid.</Alert>
+    </div>
+  </DoDont>
+</DoDontRow>
+
+- Say what happened and what to do next: “The amount must be greater than £0. Enter it and try again.”
+- One alert at a time in a form; put it above the actions, not at the top of a long page.
+- A warning does not block: the user can still continue (register the patient anyway). A danger does.
+- Do not use an alert for feedback that disappears on its own; that is a toast.
+
+## Design tokens
+
+| Part | Token |
+| --- | --- |
+| Fill | `--{tone}-subtle` |
+| Border | `--{tone}-border` |
+| Icon | `--{tone}-default` |
+| Text | `--text-primary` (readable on every subtle fill in both themes) |
+
+Radius is the control radius (8px); spacing 12px by 10px; text is `text-body`.
+
+## Accessibility
+
+- Warning and danger use `role="alert"` so a screen reader announces them as they appear; info and success use `role="status"`.
+- The icon is decorative (`aria-hidden`); the message text is the content.
+- Text on the subtle fills meets AA contrast in light and dark.

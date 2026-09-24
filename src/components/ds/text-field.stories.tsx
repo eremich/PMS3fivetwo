@@ -13,6 +13,7 @@ const meta = {
     error: { control: "text" },
     required: { control: "boolean" },
     disabled: { control: "boolean" },
+    multiline: { control: "boolean", description: "Renders a growing textarea instead of a single-line input." },
   },
   decorators: [
     (Story) => (
@@ -37,6 +38,9 @@ export const WithError: Story = {
   args: { label: "Phone", defaultValue: "0770", error: "Enter a full UK number, for example 07700 900000." },
 };
 export const Disabled: Story = { args: { label: "Record number", defaultValue: "MRN-00042", disabled: true } };
+export const Multiline: Story = {
+  args: { label: "Clinical notes", placeholder: "Add notes for the consultant", multiline: true, rows: 3 },
+};
 export const LabelHidden: Story = {
   name: "Label hidden",
   args: { label: "Search patients", placeholder: "Search by name", showLabel: false },

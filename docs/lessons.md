@@ -80,3 +80,9 @@ Each entry follows this pattern:
 - **Why**: I styled components directly with template defaults instead of defining tokens first.
 - **Rule**: Design-system order is tokens first (primitive, semantic, component), then components that only compose them. A new variant or state means new component tokens in `src/styles/tokens/component.css`, a story, and a docs row in the same change.
 
+### [2026-09-24] Built the design-system state but not the screens that use it
+- **What happened**: Error state existed in Storybook (red border, message under the field, `aria-invalid`), but the app's forms still showed one generic message at the bottom, no red field, native browser bubbles and a silently disabled submit button. The user noticed the mismatch.
+- **Why**: I added the component to the design system and stopped, without migrating the places that hand-assemble the same thing.
+- **Rule**: Finishing a design-system component includes (1) migrating every existing usage in the app, then (2) checking the app against Storybook by comparing computed styles (border, text size and colour) of the same state. If they differ, fix the app.
+- Also: Storybook's dev build does not pick up classes from a brand-new file until it is restarted; restart before judging colours.
+

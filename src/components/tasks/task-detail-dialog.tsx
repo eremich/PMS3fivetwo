@@ -20,8 +20,7 @@ import type { FormCaptureSource, ResultStatus, TaskStatus } from "@/lib/types";
 import { AppointmentStatusBadge, PriorityBadge, ResultStatusBadge, TaskStatusBadge } from "@/components/ds/status-badge";
 import { Button } from "@/components/ui/button";
 import { SectionLabel, SectionPanel } from "@/components/ds/section-panel";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import { TextField } from "@/components/ds/text-field";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -99,6 +98,7 @@ export function TaskDetailDialog({
   const [reason, setReason] = useState("");
   const [scheduling, setScheduling] = useState(false);
   const [scheduledAt, setScheduledAt] = useState("");
+  const [scheduleSubmitted, setScheduleSubmitted] = useState(false);
   const [location, setLocation] = useState("");
   const [addingForm, setAddingForm] = useState(false);
   const [capturedBy, setCapturedBy] = useState<FormCaptureSource>("CONSULTANT_IN_CLINIC");
@@ -132,9 +132,11 @@ export function TaskDetailDialog({
     setScheduling(false);
     setScheduledAt("");
     setLocation("");
+    setScheduleSubmitted(false);
   }
 
   function confirmSchedule() {
+    setScheduleSubmitted(true);
     if (!task || !scheduledAt) return;
     scheduleAppointment(
       { bookingTaskId: task.id, scheduledAt: new Date(scheduledAt).toISOString(), location: location.trim() || undefined },
@@ -218,7 +220,10 @@ export function TaskDetailDialog({
         ) : (
           <div className="flex flex-col gap-2 rounded-surface border border-line bg-surface p-4">
             <p className="text-body font-medium">{ACTION_LABELS[pendingAction]} — add a reason (optional)</p>
-            <Textarea
+            <TextField
+              label="Reason"
+              showLabel={false}
+              multiline
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="What changed and why?"
@@ -277,26 +282,27 @@ export function TaskDetailDialog({
                 </p>
               )}
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="scheduledAt">Date &amp; time</Label>
-                  <Input
-                    id="scheduledAt"
-                    type="datetime-local"
-                    value={scheduledAt}
-                    onChange={(e) => setScheduledAt(e.target.value)}
-                    autoFocus
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="location">Location</Label>
-                  <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Imaging Suite 1" />
-                </div>
+                <TextField
+                  label="Date & time"
+                  type="datetime-local"
+                  value={scheduledAt}
+                  onChange={(e) => setScheduledAt(e.target.value)}
+                  autoFocus
+                  required
+                  error={scheduleSubmitted && !scheduledAt ? "Choose a date and time." : undefined}
+                />
+                <TextField
+                  label="Location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Imaging Suite 1"
+                />
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" size="sm" onClick={resetSchedule}>
                   Cancel
                 </Button>
-                <Button size="sm" disabled={!scheduledAt} onClick={confirmSchedule}>
+                <Button size="sm" onClick={confirmSchedule}>
                   Confirm
                 </Button>
               </div>
@@ -373,17 +379,10 @@ export function TaskDetailDialog({
                   </SelectContent>
                 </Select>
               </div>
-              {formFields.map((field) => (
-                <div key={field.key} className="flex flex-col gap-1.5">
-                  <Label htmlFor={`field-${field.key}`}>{field.label}</Label>
-                  {field.type === "textarea" ? (
-                    <Textarea
-                      id={`field-${field.key}`}
-                      rows={2}
-                      value={formValues[field.key] ?? ""}
-                      onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))}
-                    />
-                  ) : field.type === "select" ? (
+              {formFields.map((field) =>
+                field.type === "select" ? (
+                  <div key={field.key} className="flex flex-col gap-1.5">
+                    <Label htmlFor={`field-${field.key}`}>{field.label}</Label>
                     <Select
                       value={formValues[field.key] ?? ""}
                       onValueChange={(v) => setFormValues((prev) => ({ ...prev, [field.key]: v ?? "" }))}
@@ -401,15 +400,18 @@ export function TaskDetailDialog({
                         ))}
                       </SelectContent>
                     </Select>
-                  ) : (
-                    <Input
-                      id={`field-${field.key}`}
-                      value={formValues[field.key] ?? ""}
-                      onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))}
-                    />
-                  )}
-                </div>
-              ))}
+                  </div>
+                ) : (
+                  <TextField
+                    key={field.key}
+                    label={field.label}
+                    multiline={field.type === "textarea"}
+                    rows={2}
+                    value={formValues[field.key] ?? ""}
+                    onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))}
+                  />
+                ),
+              )}
               <div className="flex justify-end gap-2">
                 <Button variant="outline" size="sm" onClick={resetForm}>
                   Cancel

@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useAppData } from "@/lib/app-context";
 import type { PaymentType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { RadioCard } from "@/components/ds/radio-card";
+import { TextField } from "@/components/ds/text-field";
 import {
   Dialog,
   DialogContent,
@@ -33,18 +33,24 @@ export function BillingDialog({ open, onOpenChange, episodeOfCareId }: BillingDi
   const [paymentType, setPaymentType] = useState<PaymentType>("SELF_PAY");
   const [amount, setAmount] = useState("");
   const [insurerName, setInsurerName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const isValid = Number(amount) > 0 && (paymentType === "SELF_PAY" || insurerName.trim().length > 0);
+  // Errors appear after the first submit attempt, then update as the user types.
+  const amountError = Number(amount) > 0 ? undefined : "Enter an amount greater than £0.";
+  const insurerError =
+    paymentType === "INSURER" && insurerName.trim().length === 0 ? "Enter the insurer's name." : undefined;
 
   function reset() {
     setPaymentType("SELF_PAY");
     setAmount("");
     setInsurerName("");
+    setSubmitted(false);
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!isValid) return;
+    setSubmitted(true);
+    if (amountError || insurerError) return;
     addBillingRecord({
       episodeOfCareId,
       paymentType,
@@ -64,7 +70,7 @@ export function BillingDialog({ open, onOpenChange, episodeOfCareId }: BillingDi
       }}
     >
       <DialogContent className="sm:max-w-md">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <DialogHeader>
             <DialogTitle>Log billing confirmation</DialogTitle>
             <DialogDescription>
@@ -86,28 +92,34 @@ export function BillingDialog({ open, onOpenChange, episodeOfCareId }: BillingDi
           </div>
 
           {paymentType === "INSURER" && (
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="insurerName">Insurer name</Label>
-              <Input
-                id="insurerName"
-                value={insurerName}
-                onChange={(e) => setInsurerName(e.target.value)}
-                placeholder="Bupa"
-                autoFocus
-              />
-            </div>
+            <TextField
+              label="Insurer name"
+              value={insurerName}
+              onChange={(e) => setInsurerName(e.target.value)}
+              placeholder="Bupa"
+              autoFocus
+              required
+              error={submitted ? insurerError : undefined}
+            />
           )}
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="amount">Amount (£)</Label>
-            <Input id="amount" type="number" min="0" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="180" />
-          </div>
+          <TextField
+            label="Amount (£)"
+            type="number"
+            min="0"
+            step="0.01"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="180"
+            required
+            error={submitted ? amountError : undefined}
+          />
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!isValid}>
+            <Button type="submit">
               Confirm
             </Button>
           </DialogFooter>

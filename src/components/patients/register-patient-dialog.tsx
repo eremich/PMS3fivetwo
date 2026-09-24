@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { TriangleAlert } from "lucide-react";
 import { useAppData } from "@/lib/app-context";
 import { findDuplicatePatient, fullName } from "@/lib/patient-helpers";
 import type { Patient } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Alert } from "@/components/ds/alert";
+import { TextField } from "@/components/ds/text-field";
 import {
   Dialog,
   DialogContent,
@@ -36,12 +35,16 @@ export function RegisterPatientDialog({
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [touched, setTouched] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const duplicate =
     firstName && lastName && dateOfBirth ? findDuplicatePatient(patients, firstName, lastName, dateOfBirth) : null;
 
-  const isValid = firstName.trim().length > 0 && lastName.trim().length > 0 && dateOfBirth.length > 0;
+  // Errors appear after the first submit attempt, then update as the user types.
+  const firstNameError = firstName.trim().length === 0 ? "Enter a first name." : undefined;
+  const lastNameError = lastName.trim().length === 0 ? "Enter a last name." : undefined;
+  const dobError = dateOfBirth.length === 0 ? "Enter a date of birth." : undefined;
+  const isValid = !firstNameError && !lastNameError && !dobError;
 
   function reset() {
     setFirstName("");
@@ -49,12 +52,12 @@ export function RegisterPatientDialog({
     setDateOfBirth("");
     setPhone("");
     setEmail("");
-    setTouched(false);
+    setSubmitted(false);
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setTouched(true);
+    setSubmitted(true);
     if (!isValid) return;
     const patient = addPatient({
       firstName: firstName.trim(),
@@ -77,70 +80,62 @@ export function RegisterPatientDialog({
       }}
     >
       <DialogContent className="sm:max-w-md">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <DialogHeader>
             <DialogTitle>Register patient</DialogTitle>
             <DialogDescription>Create a new patient record before adding a referral.</DialogDescription>
           </DialogHeader>
 
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="firstName">First name</Label>
-              <Input
-                id="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                autoFocus
-                required
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="lastName">Last name</Label>
-              <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="dob">Date of birth</Label>
-            <Input
-              id="dob"
-              type="date"
-              value={dateOfBirth}
-              max={new Date().toISOString().split("T")[0]}
-              onChange={(e) => setDateOfBirth(e.target.value)}
+            <TextField
+              label="First name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              autoFocus
               required
+              error={submitted ? firstNameError : undefined}
+            />
+            <TextField
+              label="Last name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              error={submitted ? lastNameError : undefined}
             />
           </div>
 
+          <TextField
+            label="Date of birth"
+            type="date"
+            value={dateOfBirth}
+            max={new Date().toISOString().split("T")[0]}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            required
+            error={submitted ? dobError : undefined}
+          />
+
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="07700 900000" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
-              />
-            </div>
+            <TextField
+              label="Phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="07700 900000"
+            />
+            <TextField
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+            />
           </div>
 
           {duplicate && (
-            <div className="flex animate-in items-start gap-2 rounded-control bg-warning-subtle px-3 py-2.5 text-body text-fg fade-in-0 slide-in-from-top-1 duration-200 ease-out">
-              <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
-              <span>
-                A patient named <strong>{fullName(duplicate)}</strong> with this date of birth already exists (
-                {duplicate.mrn}). Check before registering a duplicate.
-              </span>
-            </div>
-          )}
-
-          {touched && !isValid && (
-            <p className="text-body text-destructive-text">First name, last name, and date of birth are required.</p>
+            <Alert tone="warning" title="Possible duplicate">
+              A patient named {fullName(duplicate)} with this date of birth already exists ({duplicate.mrn}). Check before
+              registering a duplicate.
+            </Alert>
           )}
 
           <DialogFooter>

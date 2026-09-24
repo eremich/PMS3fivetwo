@@ -134,7 +134,8 @@ Light (`:root`) and dark (`.dark`) share token names; only semantic values chang
 | `PageHeader` | title, description, optional actions |
 | `Toolbar` | filter row, right-aligned meta (result count) |
 | `SearchInput` | search field with icon |
-| `TextField` | label + input + hint + error in one component: `label`, `showLabel` (false = visually hidden, still read by screen readers), `description`, `error`, `required`; wires label, hint and error for accessibility. Use it instead of hand-pairing `Label` and `Input` |
+| `Alert` | form- or page-level message with tone `info`, `success`, `warning`, `danger`; icon, feedback tokens, announced with `role="alert"` (warning, danger) or `role="status"` |
+| `TextField` | label + input (or textarea with `multiline`) + hint + error in one component: `label`, `showLabel` (false = visually hidden, still read by screen readers), `description`, `error`, `required`, `multiline`; wires label, hint and error for accessibility. Use it instead of hand-pairing `Label` and `Input` |
 | `FilterChip` | toggle filter, `aria-pressed` |
 | `TableCard` | bordered surface around a table or list |
 | `StatTile` | metric tile, `emphasis` for the primary metric |
@@ -145,6 +146,16 @@ Light (`:root`) and dark (`.dark`) share token names; only semantic values chang
 | `status-badge` | `TaskStatusBadge`, `PriorityBadge`, `AppointmentStatusBadge`, `ResultStatusBadge`, `BillingStatusBadge`, `EpisodeStatusBadge` (shared `Badge`, tones from feedback tokens) |
 
 Base primitives live in `src/components/ui` (shadcn / Base UI): button, input, textarea, select, dialog, dropdown-menu, radio-group, label, avatar, table. All class merging goes through `cn` from `@/lib/utils` (it knows our type tokens).
+
+## Forms
+
+Every text field in the app is a `TextField`; only selects and radio groups still pair a `Label` by hand.
+
+- **Validation timing:** nothing is marked invalid while the user is still filling in the form. After the first submit attempt, errors show per field and update as the user types. Forms use `noValidate` so the browser's own bubbles do not compete with ours.
+- **Field errors** go in `TextField`'s `error` (red border, message under the field, `aria-invalid`, announced with the field). **Form-level messages** (possible duplicate, save failed) use `Alert`.
+- **Submit is never disabled to hide a reason.** A disabled button does not say what is wrong; leave it enabled and show the errors.
+- Error text says what to do: "Enter a first name.", not "Invalid".
+- Storybook (Text field, Alert) is the reference. When the app differs, the app is wrong: compare computed styles against the story.
 
 ## Working rules
 

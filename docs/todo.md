@@ -99,6 +99,8 @@ portfolio site.
 - [x] Primary / secondary roles, all button variants with states, field / menu / chip / choice card / table header / dialog tokens, elevation and motion tokens
 - [x] `scripts/codemod-tokens.py` and `scripts/check-tokens.py` (run before committing)
 - [x] Storybook (`npm run storybook`): Foundations read the token files directly (colours, type, radius, control heights, elevation, motion, interaction-state matrix); stories for every ui/ds component, logo and theme toggle
+- [x] Forms use Text field and Alert: per-field errors, validate on submit then live, submit never disabled (register patient, billing, task scheduling and referral form text fields)
+- [ ] Select fields (referral category, captured by, referral form selects) as a labelled Select field with the same error state
 - [ ] Field borders reach 3:1 contrast (currently ~1.3:1, shared by both themes)
 - [ ] Publish Storybook (Vercel / Chromatic) for the portfolio case study
 - [ ] README rewritten as the case study (current README is the designer kit's)
