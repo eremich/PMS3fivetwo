@@ -1,0 +1,60 @@
+import { Canvas, Controls, Meta } from "@storybook/addon-docs/blocks";
+import * as InputStories from "./input.stories";
+import { Input } from "./input";
+import { TextField } from "../ds/text-field";
+import { DoDont, DoDontRow, Lead } from "../../design-system/docs-blocks";
+
+<Meta of={InputStories} />
+
+# Input
+
+<Lead>The bare single-line text field. In forms use Text field, which adds the label, hint and error; use Input on its own only where the surrounding UI already names it.</Lead>
+
+<Canvas of={InputStories.Default} />
+
+<Controls of={InputStories.Default} />
+
+## States
+
+Hover darkens the border and fills the field, focus shows a 2px keyboard ring inside the edge, invalid turns the border red with a soft ring, disabled drops to 50% with a not-allowed cursor.
+
+<Canvas of={InputStories.Filled} />
+<Canvas of={InputStories.Hover} />
+<Canvas of={InputStories.Focus} />
+<Canvas of={InputStories.Invalid} />
+<Canvas of={InputStories.Disabled} />
+
+## When to use
+
+<DoDontRow>
+  <DoDont tone="do" title="In a form: Text field, so the input has a name a screen reader can read.">
+    <div className="w-56">
+      <TextField label="Email" placeholder="name@example.com" />
+    </div>
+  </DoDont>
+  <DoDont tone="dont" title="A bare input with a placeholder as its only label inside a form.">
+    <div className="w-56">
+      <Input placeholder="Email" />
+    </div>
+  </DoDont>
+</DoDontRow>
+
+- A bare Input belongs in toolbars and filter rows, always with an `aria-label`.
+- Text on small screens is 16px so mobile browsers do not zoom on focus; it steps down to 14px from `md`.
+- Pass any native attribute straight through: `type`, `value`, `onChange`, `max`, `autoFocus`.
+
+## Design tokens
+
+| Token | Role |
+| --- | --- |
+| `--field-bg`, `--field-bg-hover`, `--field-bg-disabled` | Fill in rest, hover and disabled |
+| `--field-border`, `--field-border-hover`, `--field-border-focus` | Border in rest, hover and focus |
+| `--field-border-invalid`, `--field-ring-invalid` | Invalid border and ring |
+| `--field-text`, `--field-placeholder` | Value and placeholder colour |
+| `--control-height-md` | 40px height, shared with buttons and selects |
+
+## Accessibility
+
+- Always has an accessible name: a linked label, or `aria-label` when the label is not shown.
+- Focus ring is visible in both themes; invalid state is exposed with `aria-invalid`.
+- Known gap: the resting border contrast is about 1.3:1, below the 3:1 non-text guideline. Tracked in the project to-do.

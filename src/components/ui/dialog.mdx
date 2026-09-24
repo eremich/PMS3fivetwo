@@ -1,0 +1,39 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as DialogStories from "./dialog.stories";
+import { Lead } from "../../design-system/docs-blocks";
+
+<Meta of={DialogStories} />
+
+# Dialog
+
+<Lead>A modal window for one focused task: register a patient, log billing, review a task. It interrupts on purpose, so it should be short and end in one clear action.</Lead>
+
+<Canvas of={DialogStories.Default} />
+
+## Anatomy
+
+| Part | Purpose |
+| --- | --- |
+| Title | Names the task in a few words ("Register patient"). |
+| Description | One sentence of context under the title. |
+| Body | The fields or content; a single column, no more than one screen. |
+| Footer | The outline **Cancel** on the left, the single primary action on the right. |
+| Close | The cross in the corner and the Escape key. |
+
+## When to use
+
+- The task needs the user's full attention and returns to the page afterwards.
+- One primary action in the footer, labelled with a verb ("Register patient", not "OK").
+- If the form needs scrolling on a laptop, it is a page, not a dialog.
+- Do not open a dialog from a dialog. Use a section inside the dialog or a separate step.
+
+## Design tokens
+
+Panel: `--dialog-bg` with a `--dialog-border` ring and the panel radius (`rounded-panel`, 16px). Backdrop: `--overlay-scrim` (10% in light, 50% in dark), with a short `--motion-duration-overlay` fade.
+
+## Accessibility
+
+- Focus moves into the dialog on open, stays inside while it is open and returns to the trigger on close.
+- Escape and the close button dismiss it; the backdrop click does too.
+- The title is the dialog's accessible name; the description is announced with it.
+- Content behind the dialog is inert.

@@ -24,7 +24,7 @@ function StatusSelect({ disabled, invalid }: { disabled?: boolean; invalid?: boo
   );
 }
 
-const meta = { title: "Components/Select", component: StatusSelect } satisfies Meta<typeof StatusSelect>;
+const meta = { title: "Components/Select", tags: ["!autodocs"], parameters: { docs: { description: { component: "Dropdown for choosing one option from a short list. It shows the label of the selected option, not its stored value. Hover fills the field, focus shows a keyboard ring." } } }, component: StatusSelect } satisfies Meta<typeof StatusSelect>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

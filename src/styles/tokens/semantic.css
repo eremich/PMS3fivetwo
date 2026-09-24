@@ -13,7 +13,7 @@
   --bg-canvas: var(--primitive-neutral-50);
   --bg-surface: var(--primitive-neutral-0);
   --bg-surface-hover: var(--primitive-neutral-100);
-  --bg-surface-pressed: var(--primitive-neutral-200);
+  --bg-surface-pressed: var(--primitive-neutral-300);
   --bg-subtle: var(--primitive-neutral-50);
   --bg-overlay: var(--primitive-neutral-0);
   --overlay-scrim: color-mix(in oklch, var(--primitive-black) 10%, transparent);
@@ -36,20 +36,21 @@
 
   /* Action (primary) */
   --action-primary-default: var(--primitive-blue-600);
-  --action-primary-hover: var(--primitive-blue-550);
-  --action-primary-pressed: var(--primitive-blue-650);
+  --action-primary-hover: var(--primitive-blue-650);
+  --action-primary-pressed: var(--primitive-blue-700);
   --action-primary-subtle: var(--primitive-blue-50);
   --action-primary-subtle-hover: var(--primitive-blue-100);
 
   /* Action (secondary): quiet neutral fill for supporting actions */
   --action-secondary-default: var(--primitive-neutral-100);
-  --action-secondary-hover: var(--primitive-neutral-200);
-  --action-secondary-pressed: var(--primitive-neutral-300);
+  --action-secondary-hover: var(--primitive-neutral-300);
+  --action-secondary-pressed: var(--primitive-neutral-350);
 
   /* Feedback: default = solid/icon, subtle = soft fill, text = on subtle, border = on subtle */
   --destructive-default: var(--primitive-red-500);
   --destructive-subtle: var(--primitive-red-50);
   --destructive-subtle-hover: var(--primitive-red-100);
+  --destructive-subtle-pressed: var(--primitive-red-200);
   --destructive-text: var(--primitive-red-600);
   --destructive-border: var(--primitive-red-100);
 
@@ -79,7 +80,7 @@
   --bg-canvas: var(--primitive-neutral-950);
   --bg-surface: var(--primitive-neutral-900);
   --bg-surface-hover: var(--primitive-neutral-800);
-  --bg-surface-pressed: var(--primitive-neutral-750);
+  --bg-surface-pressed: var(--primitive-neutral-700);
   --bg-subtle: var(--primitive-neutral-800);
   --bg-overlay: var(--primitive-neutral-850);
   --overlay-scrim: color-mix(in oklch, var(--primitive-black) 50%, transparent);
@@ -98,18 +99,19 @@
   --border-focus: var(--primitive-blue-400);
 
   --action-primary-default: var(--primitive-blue-600);
-  --action-primary-hover: var(--primitive-blue-550);
+  --action-primary-hover: var(--primitive-blue-450);
   --action-primary-pressed: var(--primitive-blue-650);
   --action-primary-subtle: var(--primitive-blue-900);
   --action-primary-subtle-hover: var(--primitive-blue-800);
 
   --action-secondary-default: var(--primitive-neutral-800);
-  --action-secondary-hover: var(--primitive-neutral-750);
-  --action-secondary-pressed: var(--primitive-neutral-700);
+  --action-secondary-hover: var(--primitive-neutral-700);
+  --action-secondary-pressed: var(--primitive-neutral-600);
 
   --destructive-default: var(--primitive-red-400);
   --destructive-subtle: var(--primitive-red-900);
   --destructive-subtle-hover: var(--primitive-red-800);
+  --destructive-subtle-pressed: var(--primitive-red-700);
   --destructive-text: var(--primitive-red-300);
   --destructive-border: var(--primitive-red-800);
 

@@ -10,7 +10,7 @@ const rows = [
   { name: "Ava Wilson", category: "Respiratory", status: "COMPLETE" as const },
 ];
 
-const meta = { title: "Components/Table", component: Table } satisfies Meta<typeof Table>;
+const meta = { title: "Components/Table", tags: ["!autodocs"], parameters: { docs: { description: { component: "Data table, normally inside a TableCard. Rows are interactive only when they open something: clickable rows are reachable with Tab, open on Enter or Space, and have hover and pressed states. Static rows do not react to hover." } } }, component: Table } satisfies Meta<typeof Table>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

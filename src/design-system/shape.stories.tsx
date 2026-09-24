@@ -41,7 +41,7 @@ function Page({ title, intro, children }: { title: string; intro: string; childr
   );
 }
 
-const meta = { title: "Foundations/Shape and type", parameters: { layout: "fullscreen" } } satisfies Meta;
+const meta = { title: "Foundations/Shape and type", tags: ["!autodocs"], parameters: { layout: "fullscreen" } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

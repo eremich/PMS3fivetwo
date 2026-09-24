@@ -1,0 +1,46 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as TableStories from "./table.stories";
+import { Lead } from "../../design-system/docs-blocks";
+
+<Meta of={TableStories} />
+
+# Table
+
+<Lead>Shows records in rows and columns. Rows react to the pointer only when they open something, so hover always means “you can click this”.</Lead>
+
+## Clickable rows
+
+Used for patients, tasks and appointments: clicking a row opens its detail.
+
+<Canvas of={TableStories.ClickableRows} />
+
+- Hover fills the row with `--bg-surface-hover`; pressed uses `--bg-surface-pressed`.
+- The row is reachable with Tab and opens on Enter or Space; focus shows a 2px ring inside the row.
+- Where a row already contains its own link (the patient name), pass `tabIndex={-1}` to the row so there is one Tab stop per row, not two.
+
+## Static rows
+
+Used when rows are read-only, such as the billing report. They have no hover, no pointer cursor and no focus.
+
+<Canvas of={TableStories.StaticRows} />
+
+## Anatomy and spacing
+
+| Part | Spec |
+| --- | --- |
+| Container | `TableCard`: surface fill, line border, `rounded-surface` (12px) |
+| Header | 44px tall, `--table-header-bg`, caption text in `--table-header-text` |
+| Cell | 16px horizontal, 14px vertical padding |
+| Row divider | 1px `--border-default` |
+
+## When to use
+
+- Put the identifying column first (patient with avatar), status and dates towards the right.
+- Show a status with a badge (icon and label), never colour alone.
+- Provide an empty state ("No patients match your search") instead of an empty table.
+
+## Accessibility
+
+- A native `<table>` with header cells, so screen readers announce row and column context.
+- Clickable rows have keyboard support and a visible focus state.
+- Row text and badges keep AA contrast against the hover fill in both themes.

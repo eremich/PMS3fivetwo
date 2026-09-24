@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Textarea } from "./textarea";
 
 const meta = {
-  title: "Components/Textarea",
+  title: "Components/Textarea", parameters: { docs: { description: { component: "Multi-line text input for notes. It grows with its content. Always pair it with a visible label." } } },
   component: Textarea,
   args: { placeholder: "Clinical notes" },
   decorators: [

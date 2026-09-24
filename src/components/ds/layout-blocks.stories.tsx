@@ -10,7 +10,7 @@ import { SectionPanel } from "./section-panel";
 import { StatTile } from "./stat-tile";
 import { Toolbar } from "./toolbar";
 
-const meta = { title: "Components/Layout blocks", parameters: { layout: "padded" } } satisfies Meta;
+const meta = { title: "Components/Layout blocks", tags: ["!autodocs"], parameters: { layout: "padded", docs: { description: { component: "Page-level building blocks: page header, toolbar with search and filter chips, stat tiles, empty state and section panel. They are presentational and take data through props." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

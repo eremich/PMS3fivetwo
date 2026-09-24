@@ -1,0 +1,64 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Card, CardGrid, Lead, Tiers } from "./docs-blocks";
+
+<Meta title="Introduction" tags={["!autodocs"]} />
+
+# New Malden Diagnostic Centre design system
+
+<Lead>
+  The visual language and building blocks of the staff-facing Patient Management System: one set of tokens, one
+  set of components, light and dark themes. This Storybook is the reference; the code it renders is the source of
+  truth.
+</Lead>
+
+## What is here
+
+<CardGrid>
+  <Card title="Guidelines" href="/?path=/docs/guidelines-design-system--docs">
+    Architecture, naming rules, class names, interaction states and working rules in one page.
+  </Card>
+  <Card title="Foundations" href="/?path=/story/foundations-colors--semantic">
+    Colours, type, radius, control heights, elevation, motion and the state matrix. Read straight from the token files.
+  </Card>
+  <Card title="Components" href="/?path=/docs/components-button--docs">
+    Every component with live examples, all variants and states, a props table and usage guidance.
+  </Card>
+  <Card title="Brand" href="/?path=/docs/brand-logo--docs">
+    Logo variants for light and dark themes.
+  </Card>
+</CardGrid>
+
+## How the tokens are organised
+
+Three tiers. Components only ever touch tiers 2 and 3, so a theme change or a rebrand is an edit in one file.
+
+<Tiers />
+
+Names follow `--category-purpose-state`, with the state always last (`--action-primary-hover`). In markup the
+category word is dropped because Tailwind already adds it: `bg-primary-hover`, `text-fg-secondary`, `border-line`.
+
+## Principles
+
+- **Tokens first.** No raw colours, radii or font sizes in components; if a value is missing, add a token.
+- **One definition per state.** Hover, focus, pressed and disabled are defined once and reused everywhere.
+- **Themes are data.** Components never branch on light or dark; the semantic tokens resolve per theme.
+- **Accessible by default.** AA contrast in both themes, visible keyboard focus, labels wired to controls.
+- **Hover means clickable.** Non-interactive rows and cards have no hover.
+
+## Working with the system
+
+1. Need a colour or state? Add or extend a token in `src/styles/tokens/`, then bridge it in `theme.css`.
+2. Build the component from tokens only, and write its story with every variant and state.
+3. Document it: what it is, when to use it, do and don't, accessibility notes.
+4. Run `python scripts/check-tokens.py` before committing.
+
+## What every component page contains
+
+Following the four parts of component documentation (Nathan Curtis, EightShapes):
+
+| Part | Where you find it |
+| --- | --- |
+| Description | The lead paragraph at the top of the page |
+| Examples | Live, interactive stories with source code; variants and forced states |
+| Design reference | When to use, do and don't, accessibility notes |
+| Code reference | The props table with controls |

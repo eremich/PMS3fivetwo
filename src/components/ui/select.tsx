@@ -40,7 +40,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "flex w-fit items-center justify-between gap-1.5 rounded-control border border-field-border bg-field text-field-text py-2 pr-3 pl-3 text-body whitespace-nowrap transition-colors select-none hover:border-field-border-hover focus-ring-inset focus-visible:border-field-border-focus disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-field-border-invalid aria-invalid:ring-3 aria-invalid:ring-field-ring-invalid data-placeholder:text-field-placeholder data-[size=default]:h-control-md data-[size=sm]:h-control-sm data-[size=sm]:rounded-control *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-fit items-center justify-between gap-1.5 rounded-control border border-field-border bg-field text-field-text py-2 pr-3 pl-3 text-body whitespace-nowrap transition-colors select-none hover:border-field-border-hover hover:bg-field-hover focus-ring-inset focus-visible:border-field-border-focus disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-field-border-invalid aria-invalid:ring-3 aria-invalid:ring-field-ring-invalid data-placeholder:text-field-placeholder data-[size=default]:h-control-md data-[size=sm]:h-control-sm data-[size=sm]:rounded-control *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

@@ -1,0 +1,52 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as BlockStories from "./layout-blocks.stories";
+import { Lead } from "../../design-system/docs-blocks";
+
+<Meta of={BlockStories} />
+
+# Layout blocks
+
+<Lead>The page-level pieces every screen is built from: header, toolbar, stat tiles, empty state and section panel. They are presentational and take their data through props.</Lead>
+
+## Page header
+
+Title, optional description and a right-aligned action. The title is the page's `h1` (28px, bold); each page has one primary action.
+
+<Canvas of={BlockStories.Header} />
+
+## Toolbar with search and filter chips
+
+A row of filters above a table, with the result count on the right. Chips toggle (`aria-pressed`); a selected chip takes the primary tint.
+
+<Canvas of={BlockStories.FiltersToolbar} />
+
+- The search box, chips and selects share one 40px height, so the row lines up.
+- The result count says how many are shown out of how many ("Showing 9 of 9").
+
+## Stat tiles
+
+Metrics at the top of the dashboard. One tile can be emphasised with the primary fill; use that for the number that needs attention first.
+
+<Canvas of={BlockStories.Stats} />
+
+## Empty state
+
+Shown when a list or search returns nothing. It says what happened and offers the next step.
+
+<Canvas of={BlockStories.Empty} />
+
+## Section panel
+
+A titled block with an icon, used inside dialogs to group the appointment, result and referral parts of a task.
+
+<Canvas of={BlockStories.Panel} />
+
+## Design tokens
+
+Surfaces use `--bg-surface` with `--border-default` and the surface radius (12px). Text is `--text-primary` and `--text-secondary`. The emphasised tile uses `--action-primary-default`.
+
+## Accessibility
+
+- Filter chips expose their state with `aria-pressed` and a visible keyboard focus ring.
+- The search field has an accessible name even though it shows only a placeholder.
+- Empty states are plain text plus an action, so they read well to screen readers.

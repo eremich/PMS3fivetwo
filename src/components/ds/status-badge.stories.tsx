@@ -25,7 +25,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-const meta = { title: "Components/Status badges" } satisfies Meta;
+const meta = { title: "Components/Status badges", tags: ["!autodocs"], parameters: { docs: { description: { component: "Soft-tinted status pill with an icon, so meaning never depends on colour alone. Tones come from the feedback tokens: info, success, warning, danger and neutral. One badge per domain: task, priority, appointment, result, billing, episode." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

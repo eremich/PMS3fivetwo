@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount } from "./avatar";
 
-const meta = { title: "Components/Avatar", component: Avatar } satisfies Meta<typeof Avatar>;
+const meta = { title: "Components/Avatar", parameters: { docs: { description: { component: "Circular initials avatar for staff, with an optional status badge and grouping." } } }, component: Avatar } satisfies Meta<typeof Avatar>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

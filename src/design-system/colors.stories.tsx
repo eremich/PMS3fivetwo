@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ComponentTokensPage, PrimitivesPage, SemanticPage } from "./token-tables";
 
 const meta = {
-  title: "Foundations/Colors",
+  title: "Foundations/Colors", tags: ["!autodocs"],
   parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

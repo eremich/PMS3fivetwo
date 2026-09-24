@@ -1,0 +1,40 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as MenuStories from "./dropdown-menu.stories";
+import { Lead } from "../../design-system/docs-blocks";
+
+<Meta of={MenuStories} />
+
+# Dropdown menu
+
+<Lead>A short list of actions that opens from a button, such as switching role or choosing a colour theme.</Lead>
+
+<Canvas of={MenuStories.Default} />
+
+## Anatomy
+
+| Part | Purpose |
+| --- | --- |
+| Trigger | A button (outline or icon) that shows the menu is available. |
+| Label | An optional group title in caption text. |
+| Item | One action. Hover and keyboard focus use the same fill. |
+| Separator | Splits groups; destructive actions go last, after a separator. |
+
+## When to use
+
+- Actions or navigation that do not need to stay visible: switch user, change theme.
+- Keep it to about seven items. More than that needs search or a different pattern.
+- Destructive items are red and placed last.
+- Choosing a value for a field is a **Select**, not a menu.
+
+## States
+
+Items highlight with `--menu-item-bg-hover` on both pointer hover and keyboard focus. Disabled items drop to 50% with a not-allowed cursor. Destructive items switch to `--destructive-subtle` on highlight.
+
+## Design tokens
+
+Surface `--menu-bg` with a `--menu-border` ring and `--elevation-overlay`; items use `--menu-item-bg-hover` and `--menu-item-text`.
+
+## Accessibility
+
+- Opens on click or Enter; arrow keys move, Enter or Space selects, Escape closes and returns focus to the trigger.
+- Items have the `menuitem` role; the pointer cursor shows they are clickable.

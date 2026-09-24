@@ -8,9 +8,10 @@
   /* Neutral (cool grey, hue 265) */
   --primitive-neutral-0: oklch(1 0 0);
   --primitive-neutral-50: oklch(0.968 0.003 265);
-  --primitive-neutral-100: oklch(0.955 0.006 265);
+  --primitive-neutral-100: oklch(0.94 0.008 265);
   --primitive-neutral-200: oklch(0.925 0.005 265);
   --primitive-neutral-300: oklch(0.9 0.006 265);
+  --primitive-neutral-350: oklch(0.86 0.008 265);
   --primitive-neutral-400: oklch(0.7 0.015 265);
   --primitive-neutral-500: oklch(0.5 0.015 265);
   --primitive-neutral-600: oklch(0.42 0.015 265);
@@ -27,6 +28,7 @@
   --primitive-blue-200: oklch(0.82 0.1 262);
   --primitive-blue-300: oklch(0.72 0.15 263);
   --primitive-blue-400: oklch(0.65 0.16 263);
+  --primitive-blue-450: oklch(0.62 0.2 263);
   --primitive-blue-500: oklch(0.6 0.16 263);
   --primitive-blue-550: oklch(0.56 0.2 263);
   --primitive-blue-600: oklch(0.53 0.2 263);
@@ -38,10 +40,12 @@
   /* Red */
   --primitive-red-50: oklch(0.97 0.02 20);
   --primitive-red-100: oklch(0.91 0.06 22);
+  --primitive-red-200: oklch(0.86 0.09 22);
   --primitive-red-300: oklch(0.82 0.12 22);
   --primitive-red-400: oklch(0.7 0.19 25);
   --primitive-red-500: oklch(0.55 0.2 25);
   --primitive-red-600: oklch(0.48 0.18 25);
+  --primitive-red-700: oklch(0.42 0.1 22);
   --primitive-red-800: oklch(0.35 0.08 22);
   --primitive-red-900: oklch(0.26 0.06 20);
 

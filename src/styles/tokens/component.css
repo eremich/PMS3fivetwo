@@ -42,13 +42,14 @@
 
   --button-destructive-bg: var(--destructive-subtle);
   --button-destructive-bg-hover: var(--destructive-subtle-hover);
-  --button-destructive-bg-pressed: var(--destructive-border);
+  --button-destructive-bg-pressed: var(--destructive-subtle-pressed);
   --button-destructive-text: var(--destructive-text);
 
   --button-link-text: var(--text-link);
 
   /* Field (input, textarea, select trigger) */
   --field-bg: var(--bg-surface);
+  --field-bg-hover: var(--bg-surface-hover);
   --field-text: var(--text-primary);
   --field-placeholder: var(--text-secondary);
   --field-border: var(--border-strong);

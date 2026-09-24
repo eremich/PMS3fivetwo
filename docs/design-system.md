@@ -49,7 +49,7 @@ Tailwind adds `bg-`, `text-`, `border-` itself, so the category word is dropped 
 | `--{destructive,success,warning,info}-{default,subtle,text,border}` | `bg-destructive-subtle` `text-destructive-text` `border-destructive-border` `text-success` ... |
 | `--neutral-{subtle,text,border}` | `bg-neutral-subtle` `text-neutral-text` `border-neutral-border` |
 | `--button-{variant}-{bg,bg-hover,bg-pressed,text,border}` | `bg-button-primary` `hover:bg-button-primary-hover` `text-button-primary-text` ... |
-| `--field-*` | `bg-field` `text-field-text` `border-field-border` `border-field-border-hover` `border-field-border-focus` `border-field-border-invalid` `ring-field-ring-invalid` `bg-field-disabled` `placeholder:text-field-placeholder` |
+| `--field-*` | `bg-field` `bg-field-hover` `text-field-text` `border-field-border` `border-field-border-hover` `border-field-border-focus` `border-field-border-invalid` `ring-field-ring-invalid` `bg-field-disabled` `placeholder:text-field-placeholder` |
 | `--chip-*` | `bg-chip` `bg-chip-hover` `text-chip-text` `text-chip-text-hover` `border-chip-border` `bg-chip-selected` `text-chip-selected-text` `border-chip-selected-border` |
 | `--choice-*` (radio card) | `bg-choice` `bg-choice-hover` `border-choice-border` `bg-choice-selected` `bg-choice-selected-hover` `border-choice-selected-border` |
 | `--table-header-*` | `bg-table-header` `text-table-header-text` |
@@ -108,7 +108,7 @@ Non-clickable rows and cards have no hover fill, so hover always means "you can 
 | --- | --- | --- | --- | --- | --- |
 | Button primary / secondary / destructive | variant `-hover` | `focus-ring` | variant `-pressed` | 50%, not-allowed | n/a |
 | Button outline / ghost | variant `-hover` | `focus-ring` | variant `-pressed` | 50%, not-allowed | `aria-expanded` = hover fill |
-| Input / Textarea / Select trigger | `field-border-hover` | `focus-ring-inset` + `field-border-focus` | n/a | 50%, `field-disabled` | n/a |
+| Input / Textarea / Select trigger | `field-border-hover` + `field-hover` fill | `focus-ring-inset` + `field-border-focus` | n/a | 50%, `field-disabled` | n/a |
 | FilterChip | `chip-hover` | `focus-ring` | down 1px | 50% | `aria-pressed`: `chip-selected` |
 | RadioCard | `choice-hover` | radio has `focus-ring` | n/a | n/a | `data-checked`: `choice-selected` |
 | Menu / Select item | `menu-item-hover` (also keyboard highlight) | highlight | n/a | 50%, not-allowed | check mark |
@@ -134,6 +134,7 @@ Light (`:root`) and dark (`.dark`) share token names; only semantic values chang
 | `PageHeader` | title, description, optional actions |
 | `Toolbar` | filter row, right-aligned meta (result count) |
 | `SearchInput` | search field with icon |
+| `TextField` | label + input + hint + error in one component: `label`, `showLabel` (false = visually hidden, still read by screen readers), `description`, `error`, `required`; wires label, hint and error for accessibility. Use it instead of hand-pairing `Label` and `Input` |
 | `FilterChip` | toggle filter, `aria-pressed` |
 | `TableCard` | bordered surface around a table or list |
 | `StatTile` | metric tile, `emphasis` for the primary metric |
@@ -164,12 +165,37 @@ python scripts/check-tokens.py             # every colour class resolves to a to
 
 Run: `npm run storybook` (http://localhost:6006). Build: `npm run build-storybook`.
 
-Storybook is the visual reference for the design system. Values are never copied into it:
+Storybook is the visual reference for the design system. Values are never copied into it.
 
-- **Foundations** (`src/design-system/`): Colors (semantic, primitives, component tokens) is parsed from `src/styles/tokens/*.css` and `theme.css`; Typography, Radius and Control heights are read from `theme.css` / `component.css`. Change a token in the CSS and these pages change.
-- **Foundations** also has Shape and type (Typography, Radius, Control heights, Elevation, Motion) and **Interaction states**: a matrix of every interactive component in default / hover / focus / pressed / disabled, forced with pseudo-states so all states are visible at once.
-- **Components** (`*.stories.tsx` next to each component): Button (every variant plus hover / focus / pressed / disabled), Input, Textarea, Label, Select, Radio card, Dropdown menu, Dialog, Table, Avatar, Status badges, Layout blocks (page header, toolbar with filter chips, stat tiles, empty state, section panel), Patient avatar, Theme toggle. **Brand**: Logo (compact and full).
-- Toolbar: theme switcher (Light / Dark, toggles the `dark` class, addon-themes); hover/focus/active states via `storybook-addon-pseudo-states` (`parameters.pseudo`); accessibility panel via addon-a11y; addon-mcp exposes components to AI tools.
-- Setup: `.storybook/main.ts`, `.storybook/preview.tsx` (imports `globals.css`, loads the same fonts as the app).
-- New component or new variant/state: add or extend its story in the same change; check it in both themes.
-- `RadioCard` needs a `RadioGroup` wrapper; badges need none.
+### Structure of the sidebar
+
+| Section | Content |
+| --- | --- |
+| **Introduction** | What the system is, the three token tiers, principles, how to contribute |
+| **Guidelines** | `docs/design-system.md` rendered as-is (one copy to maintain) |
+| **Foundations** | Colours (semantic, primitives, component tokens), Shape and type (typography, radius, control heights, elevation, motion), Interaction states matrix. Parsed from `src/styles/**`, so they follow the code |
+| **Components** | One documentation page per component (see below) |
+| **Brand** | Logo variants for light and dark |
+
+### What a component page contains
+
+Following the four parts of component documentation (Nathan Curtis, via the Storybook article "4 ways to document your design system"):
+
+1. **Description**: the one-line lead under the title.
+2. **Examples**: live, interactive stories with source code; every variant and state (states forced with pseudo-states).
+3. **Design reference**: when to use, do and don't, anatomy, design tokens used, accessibility notes.
+4. **Code reference**: props table with controls (from the component's types and `argTypes`).
+
+Components with rich guidance have an `*.mdx` file next to the component (Button, Text field, Input, Select, Dialog, Table, Status badges, Dropdown menu, Radio card, Layout blocks). Simple components (Avatar, Patient avatar, Theme toggle, Logo, Textarea) use generated Docs pages (`tags: ["autodocs"]` in `.storybook/preview.tsx`) with a description in `parameters.docs.description.component`.
+
+### Adding or changing a component
+
+1. Add or extend `Component.stories.tsx`: default, every variant, every state, with `argTypes` descriptions.
+2. Write `Component.mdx` (`<Meta of={ComponentStories} />`) and set `tags: ["!autodocs"]` in the story meta so the two do not both generate a page. Reuse `Lead`, `DoDont` and `DoDontRow` from `src/design-system/docs-blocks.tsx`.
+3. Check the page in both themes.
+
+### Setup
+
+- `.storybook/main.ts` (addons: a11y, docs, themes, mcp, pseudo-states), `.storybook/preview.tsx` (imports `globals.css`, loads the same fonts as the app, theme switcher, story order), `.storybook/theme.ts` and `manager.ts` (brand theme built from the token colours), `.storybook/docs.css` (documentation typography from tokens).
+- Toolbar: Light / Dark switcher, accessibility panel, hover / focus / pressed via `parameters.pseudo`.
+- To share it: publish with Chromatic or Vercel; stories can then be embedded in Notion or Confluence through their URLs.

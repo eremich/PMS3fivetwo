@@ -1,0 +1,41 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as SelectStories from "./select.stories";
+import { Lead } from "../../design-system/docs-blocks";
+
+<Meta of={SelectStories} />
+
+# Select
+
+<Lead>Chooses one option from a short list. It shows the label of the chosen option, never its stored value.</Lead>
+
+<Canvas of={SelectStories.Default} />
+
+## States
+
+<Canvas of={SelectStories.Hover} />
+<Canvas of={SelectStories.Invalid} />
+<Canvas of={SelectStories.Disabled} />
+
+Hover fills the field and darkens the border, like Input, so all fields react the same way. Options highlight on hover and on keyboard focus with the same `--menu-item-bg-hover` token as dropdown menus.
+
+## When to use
+
+| Use a Select when | Use something else when |
+| --- | --- |
+| There are roughly 5 to 15 options and screen space is tight (statuses, categories, consultants). | There are 2 to 4 options: use Radio cards, so nothing is hidden. |
+| The list is known in advance and choosing one is enough. | The user must type to find an option in a long list: use a searchable combobox. |
+| It sits in a toolbar or a form next to other fields. | The choice triggers an action: use a Dropdown menu. |
+
+- Give the trigger a visible label or an `aria-label`; do not rely on the current value to name it.
+- Show human labels in the trigger and in the list. In code, pass a render function to `SelectValue` so the label, not the raw enum, is displayed.
+- Put the default ("All statuses") first when the Select is a filter.
+
+## Design tokens
+
+Trigger uses the `--field-*` tokens (shared with Input); the list uses `--menu-bg`, `--menu-border`, `--elevation-overlay` and `--menu-item-*`.
+
+## Accessibility
+
+- Trigger has the `combobox` role; arrow keys move through options, Enter selects, Escape closes.
+- Disabled options and disabled selects use a not-allowed cursor.
+- The list opens over the page with an elevated shadow so it stays readable in both themes.

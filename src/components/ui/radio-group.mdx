@@ -1,0 +1,38 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as RadioStories from "./radio-group.stories";
+import { Lead } from "../../design-system/docs-blocks";
+
+<Meta of={RadioStories} />
+
+# Radio card
+
+<Lead>Large selectable rows for a small, mutually exclusive choice: payment type, priority, referral route. Every option stays visible, so the user compares before choosing.</Lead>
+
+<Canvas of={RadioStories.Default} />
+
+## When to use
+
+| Use Radio cards when | Use something else when |
+| --- | --- |
+| There are 2 to 5 options and one must be chosen. | There are more than about 5 options: use a Select. |
+| The options deserve to be read side by side. | More than one option can apply: use checkboxes. |
+| The choice changes what the form asks next (self-pay versus insurer). | The choice is an action: use buttons. |
+
+- Always inside a `RadioGroup` with a group label; pre-select a sensible default.
+- Keep option labels short; add a description line only when the difference is not obvious.
+
+## States
+
+| State | Behaviour |
+| --- | --- |
+| Rest | Surface fill, strong border |
+| Hover | `--choice-bg-hover` |
+| Selected | `--choice-bg-selected` tint with the primary border |
+| Selected and hover | `--choice-bg-selected-hover` |
+| Focus | Keyboard ring on the radio |
+
+## Accessibility
+
+- Built on a real radio input: arrow keys move between options, Space selects.
+- The whole card is the click target, not just the small dot.
+- Selection is shown by the tint, the border and the filled radio, never by colour alone.

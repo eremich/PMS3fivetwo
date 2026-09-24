@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Logo } from "./logo";
 
 const meta = {
-  title: "Brand/Logo",
+  title: "Brand/Logo", parameters: { docs: { description: { component: "The centre logo as SVG in light and dark variants; the theme picks the matching one. Use compact in navigation and the full version, with the Sterling Healthcare Group line, only where it stays legible." } } },
   component: Logo,
   argTypes: { variant: { control: "inline-radio", options: ["compact", "full"] } },
 } satisfies Meta<typeof Logo>;

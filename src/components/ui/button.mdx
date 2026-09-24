@@ -1,0 +1,96 @@
+import { Canvas, Controls, Meta } from "@storybook/addon-docs/blocks";
+import * as ButtonStories from "./button.stories";
+import { Button } from "./button";
+import { DoDont, DoDontRow, Lead } from "../../design-system/docs-blocks";
+
+<Meta of={ButtonStories} />
+
+# Button
+
+<Lead>Starts an action: register, save, cancel, mark complete. If it goes to another page, it is a link, not a button.</Lead>
+
+<Canvas of={ButtonStories.Primary} />
+
+<Controls of={ButtonStories.Primary} />
+
+## Variants
+
+Six variants, each with hover, pressed and disabled states defined as component tokens in `component.css`.
+
+<Canvas of={ButtonStories.Variants} />
+
+| Variant | Use for |
+| --- | --- |
+| **Primary** | The one main action of a screen or dialog. Fill is `--button-primary-bg`. |
+| **Secondary** | Supporting actions that should not compete with the primary one. |
+| **Outline** | An alternative next to a primary action, such as Cancel. |
+| **Ghost** | Toolbar and in-row actions where a border would add noise. |
+| **Destructive** | Irreversible or risky actions, in a soft red so it does not shout. |
+| **Link** | Inline, navigation-style actions inside text. |
+
+## Sizes
+
+Heights come from `--control-height-*`, so buttons line up with inputs, selects and chips in the same row.
+
+<Canvas of={ButtonStories.Sizes} />
+
+Default (40px) for forms and toolbars, `sm` for dense tables, `xs` for in-row actions, `lg` for touch-first screens.
+
+## With an icon
+
+Icons are 16px, placed before the label, and always decorative (`aria-hidden`); the text carries the meaning.
+
+<Canvas of={ButtonStories.WithIcon} />
+
+## When to use
+
+- One **primary** button per screen or dialog. If two actions look equally important, one of them is secondary.
+- Labels are verbs: "Register patient", "Save", "Send". Not "OK" or "Submit".
+- Destructive actions state the consequence in the label: "Created in error", not "Delete".
+
+<DoDontRow>
+  <DoDont tone="do" title="Primary for the main action, outline for the alternative.">
+    <div className="flex gap-2">
+      <Button variant="outline">Cancel</Button>
+      <Button>Register patient</Button>
+    </div>
+  </DoDont>
+  <DoDont tone="dont" title="Two primary buttons: the user cannot tell which one matters.">
+    <div className="flex gap-2">
+      <Button>Cancel</Button>
+      <Button>Register patient</Button>
+    </div>
+  </DoDont>
+</DoDontRow>
+
+<DoDontRow>
+  <DoDont tone="do" title="A specific verb that says what happens.">
+    <Button>Mark complete</Button>
+  </DoDont>
+  <DoDont tone="dont" title="A vague label that says nothing about the outcome.">
+    <Button>OK</Button>
+  </DoDont>
+</DoDontRow>
+
+## States
+
+Each state is defined once and shared by every interactive component. Forced here so you can see them side by side.
+
+<Canvas of={ButtonStories.Hover} />
+<Canvas of={ButtonStories.Focus} />
+<Canvas of={ButtonStories.Pressed} />
+<Canvas of={ButtonStories.Disabled} />
+
+| State | Behaviour |
+| --- | --- |
+| Hover | Fill steps to the variant's `-hover` token. Only clickable things hover. |
+| Focus | 2px ring from `--border-focus`, keyboard only (`:focus-visible`). |
+| Pressed | Fill steps to `-pressed` and the button moves 1px down. |
+| Disabled | 50% opacity, `not-allowed` cursor, no click. |
+
+## Accessibility
+
+- Renders a real `<button>`; Enter and Space activate it.
+- Focus ring is visible on every variant in both themes.
+- Icon-only buttons need an `aria-label`.
+- Destructive text on its soft fill meets AA contrast in light and dark.

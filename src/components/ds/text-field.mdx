@@ -1,0 +1,80 @@
+import { Canvas, Controls, Meta } from "@storybook/addon-docs/blocks";
+import * as TextFieldStories from "./text-field.stories";
+import { TextField } from "./text-field";
+import { Input } from "../ui/input";
+import { DoDont, DoDontRow, Lead } from "../../design-system/docs-blocks";
+
+<Meta of={TextFieldStories} />
+
+# Text field
+
+<Lead>A labelled text input: label, field, optional hint and error message in one component, wired for screen readers.</Lead>
+
+<Canvas of={TextFieldStories.Default} />
+
+<Controls of={TextFieldStories.Default} />
+
+## Why a component and not a bare input
+
+The bare `Input` has no name a screen reader can announce. `TextField` pairs it with a `Label`, links the hint and error
+with `aria-describedby`, and sets `aria-invalid` from the `error` prop, so none of that is repeated by hand in each form.
+Use the bare `Input` only where the surrounding UI already names it, such as a search box in a toolbar.
+
+## Variations
+
+### Required
+
+A star follows the label (hidden from screen readers) and the field gets the `required` attribute.
+
+<Canvas of={TextFieldStories.Required} />
+
+### With description
+
+For a hint the user needs before typing. The hint is replaced by the error when there is one.
+
+<Canvas of={TextFieldStories.WithDescription} />
+
+### With error
+
+The field turns red, `aria-invalid` is set and the message is announced with the field.
+
+<Canvas of={TextFieldStories.WithError} />
+
+### Disabled
+
+The label dims together with the field.
+
+<Canvas of={TextFieldStories.Disabled} />
+
+### Label hidden
+
+`showLabel={false}` hides the label visually while keeping it for screen readers. Use only when the context already names the
+field, such as a search box beside a page title.
+
+<Canvas of={TextFieldStories.LabelHidden} />
+
+## When to use
+
+<DoDontRow>
+  <DoDont tone="do" title="A visible label above the field, error text that says how to fix it.">
+    <div className="w-56">
+      <TextField label="Phone" defaultValue="0770" error="Enter a full UK number, e.g. 07700 900000." />
+    </div>
+  </DoDont>
+  <DoDont tone="dont" title="A placeholder as the only label: it vanishes as soon as the user types.">
+    <div className="w-56">
+      <Input placeholder="Phone" aria-label="Phone" />
+    </div>
+  </DoDont>
+</DoDontRow>
+
+- Labels are short nouns ("Date of birth"); errors explain what to do, not just what went wrong.
+- Mark fields required rather than optional when most fields are optional, and the other way round.
+- Pass any native input attribute (`type`, `value`, `onChange`, `max`, `autoFocus`) straight through.
+
+## Accessibility
+
+- The label is tied to the input by `htmlFor` and a generated `id`.
+- Hint and error are referenced with `aria-describedby`; invalid state is exposed with `aria-invalid`.
+- Contrast for label, hint and error text meets AA in both themes.
+- The text uses the `field-*` tokens for background, border, hover, focus and invalid states.

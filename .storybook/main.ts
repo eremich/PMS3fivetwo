@@ -10,6 +10,8 @@ const config: StorybookConfig = {
     "storybook-addon-pseudo-states",
   ],
   framework: "@storybook/nextjs-vite",
+  core: { disableTelemetry: true, disableWhatsNewNotifications: true },
+  features: { sidebarOnboardingChecklist: false },
   staticDirs: ["../public"],
 };
 

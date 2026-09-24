@@ -1,0 +1,58 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as BadgeStories from "./status-badge.stories";
+import { PriorityBadge, TaskStatusBadge } from "./status-badge";
+import { DoDont, DoDontRow, Lead } from "../../design-system/docs-blocks";
+
+<Meta of={BadgeStories} />
+
+# Status badges
+
+<Lead>A soft-tinted pill with an icon and a label that tells the state of a task, appointment, result or bill at a glance. Meaning never depends on colour alone.</Lead>
+
+<Canvas of={BadgeStories.All} />
+
+## Tones
+
+Every badge maps its state to one of five tones. The tones come from the feedback tokens, so they are correct in both themes.
+
+| Tone | Tokens | Used for |
+| --- | --- | --- |
+| Info | `--info-subtle`, `--info-text`, `--info-border` | Scheduled, booked, sent, invoiced |
+| Success | `--success-*` | Complete, attended, paid, received |
+| Warning | `--warning-*` | Pending, urgent, more results needed |
+| Danger | `--destructive-*` | Red flag, cancelled, created in error |
+| Neutral | `--neutral-*` | No longer required, routine, closed |
+
+## Badges by domain
+
+| Badge | States |
+| --- | --- |
+| Task status | Pending, Scheduled, Complete, Reactivate pending, No longer required, Created in error |
+| Priority | Routine, Urgent, Red flag |
+| Appointment | Booked, Attended, Cancelled |
+| Result | Received, Sent to referrer, More needed, Complete |
+| Billing | Pending, Paid, Invoiced |
+| Episode | Open, Closed |
+
+## When to use
+
+<DoDontRow>
+  <DoDont tone="do" title="Icon and label together, so colour-blind users and screen readers get the same information.">
+    <div className="flex gap-2">
+      <PriorityBadge priority="RED_FLAG" />
+      <TaskStatusBadge status="PENDING" />
+    </div>
+  </DoDont>
+  <DoDont tone="dont" title="Colour only, with no label: the state cannot be read without seeing the hue.">
+    <span className="size-3 rounded-full bg-destructive" />
+  </DoDont>
+</DoDontRow>
+
+- A badge describes state; it is not clickable and has no hover.
+- Add a new state as a config entry in `status-badge.tsx` (tone, icon, label), not new CSS.
+- Keep labels to one or two words.
+
+## Accessibility
+
+- Text and border contrast is AA on the tinted fill in light and dark.
+- The icon is decorative (`aria-hidden`); the label carries the meaning.

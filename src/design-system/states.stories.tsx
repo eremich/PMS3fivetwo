@@ -110,7 +110,7 @@ function StatesMatrix() {
 }
 
 const meta = {
-  title: "Foundations/Interaction states",
+  title: "Foundations/Interaction states", tags: ["!autodocs"],
   parameters: {
     layout: "fullscreen",
     pseudo: {

@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "./dialog";
 
-const meta = { title: "Components/Dialog", component: Dialog } satisfies Meta<typeof Dialog>;
+const meta = { title: "Components/Dialog", tags: ["!autodocs"], parameters: { docs: { description: { component: "Modal window for one focused task, such as registering a patient or logging billing. It traps focus, closes with Escape and has one primary action in the footer." } } }, component: Dialog } satisfies Meta<typeof Dialog>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

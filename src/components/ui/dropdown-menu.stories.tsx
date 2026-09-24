@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 
-const meta = { title: "Components/Dropdown menu", component: DropdownMenu } satisfies Meta<typeof DropdownMenu>;
+const meta = { title: "Components/Dropdown menu", tags: ["!autodocs"], parameters: { docs: { description: { component: "A menu of actions opened from a button. Items highlight on hover and keyboard focus, destructive items are red, and disabled items keep a not-allowed cursor." } } }, component: DropdownMenu } satisfies Meta<typeof DropdownMenu>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

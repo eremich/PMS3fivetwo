@@ -98,6 +98,7 @@
 
   /* Component tokens: fields, menus, navigation, control heights */
   --color-field: var(--field-bg);
+  --color-field-hover: var(--field-bg-hover);
   --color-field-text: var(--field-text);
   --color-field-placeholder: var(--field-placeholder);
   --color-field-border: var(--field-border);
