@@ -38,3 +38,6 @@ dist/
 
 *storybook.log
 storybook-static
+
+# Storybook copied next to the app at build time (scripts/build-with-storybook.mjs)
+public/storybook
