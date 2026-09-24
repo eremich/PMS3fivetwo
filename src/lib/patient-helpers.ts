@@ -1,6 +1,7 @@
 import type {
   ActivityLogEntry,
   Appointment,
+  AppointmentKind,
   BookingTask,
   EpisodeOfCare,
   Patient,
@@ -148,6 +149,20 @@ export function getEpisodeForTask(episodes: EpisodeOfCare[], task: BookingTask):
 export function getPatientForEpisode(patients: Patient[], episode: EpisodeOfCare | null): Patient | null {
   if (!episode) return null;
   return patients.find((p) => p.id === episode.patientId) ?? null;
+}
+
+// Scans and tests vs seeing a consultant (the flow's "Diagnostic Appointment?" decision).
+const DIAGNOSTIC_CATEGORIES: ReferralCategory[] = ["RADIOLOGY", "CARDIOLOGY", "RESPIRATORY", "PATHOLOGY"];
+
+export function getAppointmentKind(category: ReferralCategory): AppointmentKind {
+  return DIAGNOSTIC_CATEGORIES.includes(category) ? "DIAGNOSTIC" : "CONSULTATION";
+}
+
+export const TESTS_CONFIRMED_ACTION = "TESTS_CONFIRMED";
+
+// The clinician's confirmation lives in the activity log, which feeds the billing report.
+export function getTestsConfirmation(activityLog: ActivityLogEntry[], taskId: string): ActivityLogEntry | null {
+  return activityLog.find((a) => a.bookingTaskId === taskId && a.action === TESTS_CONFIRMED_ACTION) ?? null;
 }
 
 export function getTaskActivityLog(activityLog: ActivityLogEntry[], taskId: string): ActivityLogEntry[] {

@@ -12,7 +12,7 @@ import {
   serviceRequestForms as seedForms,
   staffUsers,
 } from "./mock-data";
-import { formatDateTime, generateMrn } from "./patient-helpers";
+import { formatDateTime, generateMrn, TESTS_CONFIRMED_ACTION } from "./patient-helpers";
 import type {
   ActivityLogEntry,
   Appointment,
@@ -86,6 +86,7 @@ interface AppDataState {
   scheduleAppointment: (input: ScheduleAppointmentInput, actorId: string) => Appointment;
   updateAppointmentStatus: (appointmentId: string, status: Appointment["status"], actorId: string) => void;
   addServiceRequestForm: (input: AddServiceRequestFormInput, actorId: string) => ServiceRequestForm;
+  confirmTestsCarriedOut: (bookingTaskId: string, actorId: string) => void;
   addResult: (bookingTaskId: string, actorId: string) => ResultRecord;
   updateResultStatus: (resultId: string, status: ResultRecord["status"], actorId: string) => void;
   addBillingRecord: (input: AddBillingRecordInput) => BillingRecord;
@@ -221,6 +222,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     return form;
   };
 
+  const confirmTestsCarriedOut = (bookingTaskId: string, actorId: string) => {
+    logActivity(bookingTaskId, TESTS_CONFIRMED_ACTION, actorId, "Logged for the activity report (billing)");
+  };
+
   const addResult = (bookingTaskId: string, actorId: string): ResultRecord => {
     const result: ResultRecord = {
       id: `r-${crypto.randomUUID()}`,
@@ -280,6 +285,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       scheduleAppointment,
       updateAppointmentStatus,
       addServiceRequestForm,
+      confirmTestsCarriedOut,
       addResult,
       updateResultStatus,
       addBillingRecord,

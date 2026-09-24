@@ -2,22 +2,25 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CalendarClock, ClipboardList, FlaskConical, History } from "lucide-react";
+import { CalendarClock, Check, ClipboardList, FlaskConical, History } from "lucide-react";
 import { useAppData } from "@/lib/app-context";
 import {
   categoryLabel,
   formatDate,
   formatDateTime,
   fullName,
+  getAppointmentKind,
   getEpisodeForTask,
   getPatientForEpisode,
   getReferralFormFields,
   getTaskActivityLog,
   getTaskAppointments,
   getTaskResults,
+  getTestsConfirmation,
+  isTaskOpen,
 } from "@/lib/patient-helpers";
 import type { BookingTask, FormCaptureSource, Priority, ReferralCategory, ResultStatus, TaskStatus } from "@/lib/types";
-import { AppointmentStatusBadge, PriorityBadge, ResultStatusBadge, TaskStatusBadge } from "@/components/ds/status-badge";
+import { AppointmentKindBadge, AppointmentStatusBadge, PriorityBadge, ResultStatusBadge, TaskStatusBadge } from "@/components/ds/status-badge";
 import { Button } from "@/components/ui/button";
 import { SectionLabel, SectionPanel } from "@/components/ds/section-panel";
 import { TextField } from "@/components/ds/text-field";
@@ -98,6 +101,7 @@ export function TaskDetailDialog({
     addResult,
     updateResultStatus,
     addTask,
+    confirmTestsCarriedOut,
   } = useAppData();
   const [pendingAction, setPendingAction] = useState<TaskStatus | null>(null);
   const [reason, setReason] = useState("");
@@ -126,6 +130,9 @@ export function TaskDetailDialog({
   const referralForm = serviceRequestForms.find((f) => f.bookingTaskId === task.id) ?? null;
   const formFields = getReferralFormFields(task.category);
   const latestResult = getTaskResults(results, task.id)[0] ?? null;
+  const kind = getAppointmentKind(task.category);
+  const testsConfirmation = getTestsConfirmation(activityLog, task.id);
+  const attended = activeAppointment?.status === "ATTENDED";
 
   function resetAction() {
     setPendingAction(null);
@@ -200,16 +207,107 @@ export function TaskDetailDialog({
   // Flow: "Request for further test/appointment? → Yes → Create Task" in the same episode.
   function confirmTestRequest() {
     setTestSubmitted(true);
-    if (!task || !latestResult || !testCategory) return;
+    if (!task || !testCategory) return;
     const newTask = addTask(
       { episodeOfCareId: task.episodeOfCareId, category: testCategory, priority: testPriority },
       currentUser.id,
       `Requested after ${categoryLabel(task.category)} result`,
     );
-    updateResultStatus(latestResult.id, "COMPLETE", currentUser.id);
+    if (latestResult) updateResultStatus(latestResult.id, "COMPLETE", currentUser.id);
     updateTaskStatus(task.id, "COMPLETE", currentUser.id, `Further test requested: ${categoryLabel(testCategory)}`);
     resetTestRequest();
     setRequestedTask(newTask);
+  }
+
+  function completeConsultation() {
+    if (!task) return;
+    updateTaskStatus(task.id, "COMPLETE", currentUser.id, "Consultation complete — no further tests needed");
+  }
+
+  const testRequestForm = (
+    <div className="flex flex-col gap-2.5">
+      <p className="text-caption text-fg-secondary">
+        Completes this task and adds a new one to the same episode of care.
+      </p>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="testCategory">Test or appointment</Label>
+        <Select value={testCategory} onValueChange={(v) => setTestCategory(v as ReferralCategory)}>
+          <SelectTrigger
+            id="testCategory"
+            className="w-full"
+            aria-invalid={testSubmitted && !testCategory ? true : undefined}
+          >
+            <SelectValue placeholder="Select a category">
+              {(v: ReferralCategory | null) => (v ? categoryLabel(v) : "Select a category")}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {CATEGORIES.map((c) => (
+              <SelectItem key={c} value={c}>
+                {categoryLabel(c)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label>Priority</Label>
+        <RadioGroup
+          value={testPriority}
+          onValueChange={(v) => setTestPriority(v as Priority)}
+          className="flex flex-col gap-2"
+        >
+          {PRIORITIES.map((p) => (
+            <RadioCard key={p} id={`test-priority-${p}`} value={p}>
+              <PriorityBadge priority={p} />
+            </RadioCard>
+          ))}
+        </RadioGroup>
+      </div>
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" size="sm" onClick={resetTestRequest}>
+          Cancel
+        </Button>
+        <Button size="sm" onClick={confirmTestRequest}>
+          Create task
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Flow: after "Patient arrives" the path splits on "Diagnostic Appointment?".
+  let nextStep: React.ReactNode = null;
+  if (attended && kind === "DIAGNOSTIC") {
+    nextStep = testsConfirmation ? (
+      <p className="flex items-center gap-1.5 text-caption text-fg-secondary">
+        <Check className="size-3.5 text-success" aria-hidden="true" />
+        Tests confirmed by {actorName(staffUsers, testsConfirmation.changedById)} ·{" "}
+        {formatDateTime(testsConfirmation.changedAt)}
+      </p>
+    ) : (
+      isTaskOpen(task.status) && (
+        <Button variant="outline" size="sm" className="w-fit" onClick={() => confirmTestsCarriedOut(task.id, currentUser.id)}>
+          <Check className="size-4" aria-hidden="true" />
+          Confirm tests carried out
+        </Button>
+      )
+    );
+  } else if (attended && kind === "CONSULTATION" && isTaskOpen(task.status)) {
+    nextStep = requestingTest ? (
+      testRequestForm
+    ) : (
+      <div className="flex flex-col gap-2">
+        <p className="text-body font-medium">Further test or appointment needed?</p>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" onClick={completeConsultation}>
+            No — complete task
+          </Button>
+          <Button variant="outline" size="sm" onClick={startTestRequest}>
+            Request further test
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -246,7 +344,22 @@ export function TaskDetailDialog({
         <div className="flex items-center gap-2">
           <TaskStatusBadge status={task.status} />
           <PriorityBadge priority={task.priority} />
+          <AppointmentKindBadge kind={kind} />
         </div>
+
+        {requestedTask && (
+          <Alert tone="success" title="Further test requested">
+            {categoryLabel(requestedTask.category)} is now a pending task in this episode of care.
+            {patient && (
+              <>
+                {" "}
+                <Link href={`/patients/${patient.id}`} className="font-medium text-fg-link hover:underline">
+                  View episode
+                </Link>
+              </>
+            )}
+          </Alert>
+        )}
 
         {!pendingAction ? (
           availableActions.length > 0 && (
@@ -284,33 +397,36 @@ export function TaskDetailDialog({
 
         <SectionPanel icon={CalendarClock} title="Appointment">
           {activeAppointment && activeAppointment.status !== "CANCELLED" ? (
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body">
-                {formatDateTime(activeAppointment.scheduledAt)}
-                {activeAppointment.location && <span className="text-fg-secondary"> · {activeAppointment.location}</span>}
-              </p>
-              <div className="flex items-center gap-2">
-                <AppointmentStatusBadge status={activeAppointment.status} />
-                {activeAppointment.status === "BOOKED" && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="xs"
-                      onClick={() => updateAppointmentStatus(activeAppointment.id, "ATTENDED", currentUser.id)}
-                    >
-                      Mark attended
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="xs"
-                      onClick={() => updateAppointmentStatus(activeAppointment.id, "CANCELLED", currentUser.id)}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-body">
+                  {formatDateTime(activeAppointment.scheduledAt)}
+                  {activeAppointment.location && <span className="text-fg-secondary"> · {activeAppointment.location}</span>}
+                </p>
+                <div className="flex items-center gap-2">
+                  <AppointmentStatusBadge status={activeAppointment.status} />
+                  {activeAppointment.status === "BOOKED" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="xs"
+                        onClick={() => updateAppointmentStatus(activeAppointment.id, "ATTENDED", currentUser.id)}
+                      >
+                        Mark attended
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="xs"
+                        onClick={() => updateAppointmentStatus(activeAppointment.id, "CANCELLED", currentUser.id)}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+              {nextStep}
+            </>
           ) : !scheduling ? (
             <Button variant="outline" size="sm" className="w-fit" onClick={() => setScheduling(true)}>
               Schedule appointment
@@ -351,106 +467,46 @@ export function TaskDetailDialog({
           )}
         </SectionPanel>
 
-        <SectionPanel icon={FlaskConical} title="Result">
-          {!latestResult ? (
-            <Button variant="outline" size="sm" className="w-fit" onClick={logResultReceived}>
-              Log result received
-            </Button>
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-body text-fg-secondary">Received {formatDateTime(latestResult.receivedAt)}</p>
-                <ResultStatusBadge status={latestResult.status} />
+        {(kind === "DIAGNOSTIC" || latestResult) && (
+          <SectionPanel icon={FlaskConical} title="Result">
+            {!latestResult ? (
+              <Button variant="outline" size="sm" className="w-fit" onClick={logResultReceived}>
+                Log result received
+              </Button>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-body text-fg-secondary">Received {formatDateTime(latestResult.receivedAt)}</p>
+                  <ResultStatusBadge status={latestResult.status} />
+                </div>
+                {latestResult.status === "RECEIVED" && (
+                  <Button variant="outline" size="sm" className="w-fit" onClick={() => setResultStatus("SENT_TO_REFERRER")}>
+                    Send to referrer
+                  </Button>
+                )}
+                {latestResult.status === "SENT_TO_REFERRER" && !requestingTest && (
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="sm" onClick={markResultCompleteAndCloseTask}>
+                      Complete — no further tests
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={startTestRequest}>
+                      Request further test
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => setResultStatus("MORE_NEEDED")}>
+                      More results needed
+                    </Button>
+                  </div>
+                )}
+                {latestResult.status === "SENT_TO_REFERRER" && requestingTest && testRequestForm}
+                {latestResult.status === "MORE_NEEDED" && (
+                  <Button variant="outline" size="sm" className="w-fit" onClick={logResultReceived}>
+                    Log next result received
+                  </Button>
+                )}
               </div>
-              {latestResult.status === "RECEIVED" && (
-                <Button variant="outline" size="sm" className="w-fit" onClick={() => setResultStatus("SENT_TO_REFERRER")}>
-                  Send to referrer
-                </Button>
-              )}
-              {latestResult.status === "SENT_TO_REFERRER" && !requestingTest && (
-                <div className="flex flex-wrap gap-2">
-                  <Button size="sm" onClick={markResultCompleteAndCloseTask}>
-                    Complete — no further tests
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={startTestRequest}>
-                    Request further test
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => setResultStatus("MORE_NEEDED")}>
-                    More results needed
-                  </Button>
-                </div>
-              )}
-              {latestResult.status === "SENT_TO_REFERRER" && requestingTest && (
-                <div className="flex flex-col gap-2.5">
-                  <p className="text-caption text-fg-secondary">
-                    Completes this task and adds a new one to the same episode of care.
-                  </p>
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="testCategory">Test or appointment</Label>
-                    <Select value={testCategory} onValueChange={(v) => setTestCategory(v as ReferralCategory)}>
-                      <SelectTrigger
-                        id="testCategory"
-                        className="w-full"
-                        aria-invalid={testSubmitted && !testCategory ? true : undefined}
-                      >
-                        <SelectValue placeholder="Select a category">
-                          {(v: ReferralCategory | null) => (v ? categoryLabel(v) : "Select a category")}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CATEGORIES.map((c) => (
-                          <SelectItem key={c} value={c}>
-                            {categoryLabel(c)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label>Priority</Label>
-                    <RadioGroup
-                      value={testPriority}
-                      onValueChange={(v) => setTestPriority(v as Priority)}
-                      className="flex flex-col gap-2"
-                    >
-                      {PRIORITIES.map((p) => (
-                        <RadioCard key={p} id={`test-priority-${p}`} value={p}>
-                          <PriorityBadge priority={p} />
-                        </RadioCard>
-                      ))}
-                    </RadioGroup>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={resetTestRequest}>
-                      Cancel
-                    </Button>
-                    <Button size="sm" onClick={confirmTestRequest}>
-                      Create task
-                    </Button>
-                  </div>
-                </div>
-              )}
-              {requestedTask && (
-                <Alert tone="success" title="Further test requested">
-                  {categoryLabel(requestedTask.category)} is now a pending task in this episode of care.
-                  {patient && (
-                    <>
-                      {" "}
-                      <Link href={`/patients/${patient.id}`} className="font-medium text-fg-link hover:underline">
-                        View episode
-                      </Link>
-                    </>
-                  )}
-                </Alert>
-              )}
-              {latestResult.status === "MORE_NEEDED" && (
-                <Button variant="outline" size="sm" className="w-fit" onClick={logResultReceived}>
-                  Log next result received
-                </Button>
-              )}
-            </div>
-          )}
-        </SectionPanel>
+            )}
+          </SectionPanel>
+        )}
 
         <SectionPanel icon={ClipboardList} title="Referral form">
           {referralForm ? (
