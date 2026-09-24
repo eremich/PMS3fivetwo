@@ -25,6 +25,7 @@ export const patients: Patient[] = [
   { id: "p-5", mrn: "P-2026-0005", firstName: "Ava", lastName: "Wilson", dateOfBirth: "2001-09-15", phone: "07700 900005" },
   { id: "p-6", mrn: "P-2026-0006", firstName: "Ethan", lastName: "Taylor", dateOfBirth: "1966-05-08", email: "ethan.taylor@example.com" },
   { id: "p-7", mrn: "P-2026-0007", firstName: "Sophia", lastName: "Evans", dateOfBirth: "1979-12-19", phone: "07700 900007" },
+  { id: "p-8", mrn: "P-2026-0008", firstName: "Grace", lastName: "Hughes", dateOfBirth: "1988-04-03", phone: "07700 900008" },
 ];
 
 export const episodes: EpisodeOfCare[] = [
@@ -36,6 +37,7 @@ export const episodes: EpisodeOfCare[] = [
   { id: "e-6", patientId: "p-6", referralReceivedAt: "2026-09-10T13:45:00Z" },
   { id: "e-7", patientId: "p-7", referralReceivedAt: "2026-09-15T09:30:00Z" },
   { id: "e-8", patientId: "p-1", referralReceivedAt: "2026-07-14T09:00:00Z" },
+  { id: "e-9", patientId: "p-8", referralReceivedAt: "2026-09-16T10:00:00Z" },
 ];
 
 export const bookingTasks: BookingTask[] = [
@@ -47,6 +49,7 @@ export const bookingTasks: BookingTask[] = [
   { id: "t-6", episodeOfCareId: "e-6", category: "CARDIOLOGY", status: "REACTIVATE_PENDING", priority: "URGENT", assignedConsultantId: "u-cons-2", createdAt: "2026-09-10T13:50:00Z", updatedAt: "2026-09-18T08:00:00Z" },
   { id: "t-7", episodeOfCareId: "e-7", category: "DERMATOLOGY", status: "NO_LONGER_REQUIRED", priority: "ROUTINE", createdAt: "2026-09-15T09:35:00Z", updatedAt: "2026-09-16T09:00:00Z" },
   { id: "t-8", episodeOfCareId: "e-1", category: "PATHOLOGY", status: "CREATED_IN_ERROR", priority: "ROUTINE", createdAt: "2026-09-04T09:00:00Z", updatedAt: "2026-09-04T09:10:00Z" },
+  { id: "t-10", episodeOfCareId: "e-9", category: "GYNAECOLOGY", status: "SCHEDULED", priority: "ROUTINE", createdAt: "2026-09-16T10:05:00Z", updatedAt: "2026-09-17T09:00:00Z" },
   { id: "t-9", episodeOfCareId: "e-8", category: "PATHOLOGY", status: "COMPLETE", priority: "ROUTINE", createdAt: "2026-07-14T09:05:00Z", updatedAt: "2026-07-20T09:00:00Z" },
 ];
 
@@ -54,6 +57,7 @@ export const appointments: Appointment[] = [
   { id: "a-1", bookingTaskId: "t-1", scheduledAt: "2026-09-30T10:00:00Z", location: "Imaging Suite 1", status: "BOOKED" },
   { id: "a-2", bookingTaskId: "t-3", scheduledAt: "2026-09-11T09:00:00Z", location: "Phlebotomy", status: "ATTENDED" },
   { id: "a-3", bookingTaskId: "t-5", scheduledAt: "2026-10-02T13:30:00Z", location: "Lung Function Lab", status: "BOOKED" },
+  { id: "a-4", bookingTaskId: "t-10", scheduledAt: "2026-09-25T11:00:00Z", location: "Consulting Room 2", status: "BOOKED" },
 ];
 
 export const serviceRequestForms: ServiceRequestForm[] = [
@@ -81,6 +85,8 @@ export const activityLog: ActivityLogEntry[] = [
   { id: "log-1", bookingTaskId: "t-6", action: "REACTIVATE_REQUESTED", changedById: "u-sec-1", changedAt: "2026-09-18T08:00:00Z", details: "Patient requested new appointment date" },
   { id: "log-2", bookingTaskId: "t-7", action: "DEACTIVATED", changedById: "u-admin-1", changedAt: "2026-09-16T09:00:00Z", details: "Referral withdrawn by referrer" },
   { id: "log-3", bookingTaskId: "t-8", action: "MARKED_CREATED_IN_ERROR", changedById: "u-sec-1", changedAt: "2026-09-04T09:10:00Z", details: "Duplicate of t-3" },
+  { id: "log-4", bookingTaskId: "t-3", action: "TESTS_CONFIRMED", changedById: "u-cons-1", changedAt: "2026-09-11T10:00:00Z", details: "Logged for the activity report (billing)" },
+  { id: "log-5", bookingTaskId: "t-9", action: "TESTS_CONFIRMED", changedById: "u-cons-1", changedAt: "2026-07-18T10:00:00Z", details: "Logged for the activity report (billing)" },
 ];
 
 export const billingRecords: BillingRecord[] = [

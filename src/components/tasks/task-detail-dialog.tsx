@@ -285,7 +285,7 @@ export function TaskDetailDialog({
         {formatDateTime(testsConfirmation.changedAt)}
       </p>
     ) : (
-      isTaskOpen(task.status) && (
+      task.status !== "CREATED_IN_ERROR" && (
         <Button variant="outline" size="sm" className="w-fit" onClick={() => confirmTestsCarriedOut(task.id, currentUser.id)}>
           <Check className="size-4" aria-hidden="true" />
           Confirm tests carried out

@@ -165,6 +165,16 @@ export function getTestsConfirmation(activityLog: ActivityLogEntry[], taskId: st
   return activityLog.find((a) => a.bookingTaskId === taskId && a.action === TESTS_CONFIRMED_ACTION) ?? null;
 }
 
+// Flow: "Test confirmation logged for activity report to feed billing". A diagnostic task
+// counts once the clinician confirms the tests; a consultation counts once it is complete.
+export function isEpisodeBillable(tasks: BookingTask[], activityLog: ActivityLogEntry[]): boolean {
+  return tasks.some((t) =>
+    getAppointmentKind(t.category) === "DIAGNOSTIC"
+      ? getTestsConfirmation(activityLog, t.id) !== null
+      : t.status === "COMPLETE",
+  );
+}
+
 export function getTaskActivityLog(activityLog: ActivityLogEntry[], taskId: string): ActivityLogEntry[] {
   return activityLog
     .filter((a) => a.bookingTaskId === taskId)
