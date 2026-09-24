@@ -1,0 +1,147 @@
+/*
+ * TAILWIND BRIDGE
+ * Exposes semantic and component tokens as utilities. The Tailwind default palette, radii and
+ * font sizes are removed on purpose: bg-blue-500, rounded-lg or text-sm no longer exist, so the
+ * only way to style is through the design system.
+ *
+ * Class names drop the category word Tailwind already supplies (bg-, text-, border-):
+ *   --bg-surface -> bg-surface        --text-secondary -> text-fg-secondary
+ *   --border-default -> border-line   --action-primary-default -> bg-primary / border-primary
+ */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --text-*: initial;
+}
+
+@theme inline {
+  /* Backgrounds */
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-surface-hover: var(--bg-surface-hover);
+  --color-surface-pressed: var(--bg-surface-pressed);
+  --color-subtle: var(--bg-subtle);
+  --color-overlay: var(--bg-overlay);
+  --color-scrim: var(--overlay-scrim);
+
+  /* Text ("fg" = foreground, so text-fg-secondary, not text-text-secondary) */
+  --color-fg: var(--text-primary);
+  --color-fg-secondary: var(--text-secondary);
+  --color-fg-inverse: var(--text-inverse);
+  --color-fg-link: var(--text-link);
+
+  /* Borders ("line") and focus */
+  --color-line: var(--border-default);
+  --color-line-strong: var(--border-strong);
+  --color-line-strong-hover: var(--border-strong-hover);
+  --color-focus: var(--border-focus);
+
+  /* Action roles */
+  --color-primary: var(--action-primary-default);
+  --color-primary-hover: var(--action-primary-hover);
+  --color-primary-pressed: var(--action-primary-pressed);
+  --color-primary-subtle: var(--action-primary-subtle);
+  --color-primary-subtle-hover: var(--action-primary-subtle-hover);
+  --color-secondary: var(--action-secondary-default);
+  --color-secondary-hover: var(--action-secondary-hover);
+  --color-secondary-pressed: var(--action-secondary-pressed);
+
+  /* Feedback */
+  --color-destructive: var(--destructive-default);
+  --color-destructive-subtle: var(--destructive-subtle);
+  --color-destructive-subtle-hover: var(--destructive-subtle-hover);
+  --color-destructive-text: var(--destructive-text);
+  --color-destructive-border: var(--destructive-border);
+
+  --color-success: var(--success-default);
+  --color-success-subtle: var(--success-subtle);
+  --color-success-text: var(--success-text);
+  --color-success-border: var(--success-border);
+
+  --color-warning: var(--warning-default);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-text: var(--warning-text);
+  --color-warning-border: var(--warning-border);
+
+  --color-info: var(--info-default);
+  --color-info-subtle: var(--info-subtle);
+  --color-info-text: var(--info-text);
+  --color-info-border: var(--info-border);
+
+  --color-neutral-subtle: var(--neutral-subtle);
+  --color-neutral-text: var(--neutral-text);
+  --color-neutral-border: var(--neutral-border);
+
+  /* Component tokens: button variants */
+  --color-button-primary: var(--button-primary-bg);
+  --color-button-primary-hover: var(--button-primary-bg-hover);
+  --color-button-primary-pressed: var(--button-primary-bg-pressed);
+  --color-button-primary-text: var(--button-primary-text);
+  --color-button-secondary: var(--button-secondary-bg);
+  --color-button-secondary-hover: var(--button-secondary-bg-hover);
+  --color-button-secondary-pressed: var(--button-secondary-bg-pressed);
+  --color-button-secondary-text: var(--button-secondary-text);
+  --color-button-outline: var(--button-outline-bg);
+  --color-button-outline-hover: var(--button-outline-bg-hover);
+  --color-button-outline-pressed: var(--button-outline-bg-pressed);
+  --color-button-outline-text: var(--button-outline-text);
+  --color-button-outline-border: var(--button-outline-border);
+  --color-button-ghost-hover: var(--button-ghost-bg-hover);
+  --color-button-ghost-pressed: var(--button-ghost-bg-pressed);
+  --color-button-ghost-text: var(--button-ghost-text);
+  --color-button-destructive: var(--button-destructive-bg);
+  --color-button-destructive-hover: var(--button-destructive-bg-hover);
+  --color-button-destructive-pressed: var(--button-destructive-bg-pressed);
+  --color-button-destructive-text: var(--button-destructive-text);
+  --color-button-link-text: var(--button-link-text);
+
+  /* Component tokens: fields, menus, navigation, control heights */
+  --color-field: var(--field-bg);
+  --color-field-text: var(--field-text);
+  --color-field-placeholder: var(--field-placeholder);
+  --color-field-border: var(--field-border);
+  --color-field-border-hover: var(--field-border-hover);
+  --color-field-border-focus: var(--field-border-focus);
+  --color-field-border-invalid: var(--field-border-invalid);
+  --color-field-ring-invalid: var(--field-ring-invalid);
+  --color-field-disabled: var(--field-bg-disabled);
+  --color-menu-item-hover: var(--menu-item-bg-hover);
+  --color-menu-item-text: var(--menu-item-text);
+  --color-nav-hover: var(--nav-item-bg-hover);
+  --color-nav-active: var(--nav-item-bg-active);
+  --spacing-control-xs: var(--control-height-xs);
+  --spacing-control-sm: var(--control-height-sm);
+  --spacing-control-md: var(--control-height-md);
+  --spacing-control-lg: var(--control-height-lg);
+
+  /* Radius by role: controls (inputs, buttons, chips, pills), surfaces (cards, tables), panels (app panel, dialogs) */
+  --radius-control: 0.5rem;
+  --radius-surface: 0.75rem;
+  --radius-panel: 1rem;
+
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Type scale (semantic by role) */
+@theme {
+  --text-h1: 1.75rem;
+  --text-h1--line-height: 2.25rem;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 2rem;
+  --text-h2--font-weight: 700;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.5rem;
+  --text-h3--font-weight: 600;
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.5rem;
+  --text-h4--font-weight: 600;
+  --text-body-lg: 1rem;
+  --text-body-lg--line-height: 1.5rem;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.25rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+}

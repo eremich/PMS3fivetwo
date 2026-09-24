@@ -174,22 +174,22 @@ export default function PatientsPage() {
                           >
                             {fullName(patient)}
                           </Link>
-                          <div className="text-caption whitespace-nowrap text-muted-foreground">{patient.mrn}</div>
+                          <div className="text-caption whitespace-nowrap text-fg-secondary">{patient.mrn}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      {highestPriority ? <PriorityBadge priority={highestPriority} /> : <span className="text-muted-foreground">—</span>}
+                      {highestPriority ? <PriorityBadge priority={highestPriority} /> : <span className="text-fg-secondary">—</span>}
                     </TableCell>
                     <TableCell className="tabular-nums">{openTaskCount}</TableCell>
                     <TableCell>
-                      {nextAppointment ? formatDate(nextAppointment.scheduledAt) : <span className="text-muted-foreground">—</span>}
+                      {nextAppointment ? formatDate(nextAppointment.scheduledAt) : <span className="text-fg-secondary">—</span>}
                     </TableCell>
-                    <TableCell className="text-muted-foreground">
+                    <TableCell className="text-fg-secondary">
                       {formatDate(patient.dateOfBirth)} ({calculateAge(patient.dateOfBirth)})
                     </TableCell>
-                    <TableCell className="hidden text-muted-foreground lg:table-cell">{patient.phone ?? patient.email ?? "—"}</TableCell>
-                    <TableCell className="hidden text-muted-foreground lg:table-cell">
+                    <TableCell className="hidden text-fg-secondary lg:table-cell">{patient.phone ?? patient.email ?? "—"}</TableCell>
+                    <TableCell className="hidden text-fg-secondary lg:table-cell">
                       {latestReferral ? formatDate(latestReferral) : "—"}
                     </TableCell>
                   </TableRow>
@@ -199,7 +199,7 @@ export default function PatientsPage() {
           </TableCard>
 
           <TableCard className="md:hidden">
-            <ul className="divide-y divide-border">
+            <ul className="divide-y divide-line">
               {filtered.map(({ patient, openTaskCount, highestPriority }) => (
                 <li key={patient.id}>
                   <Link
@@ -210,14 +210,14 @@ export default function PatientsPage() {
                       <PatientAvatar name={fullName(patient)} />
                       <div className="flex min-w-0 flex-col">
                         <span className="truncate font-semibold">{fullName(patient)}</span>
-                        <span className="text-caption text-muted-foreground">
+                        <span className="text-caption text-fg-secondary">
                           {patient.mrn} · {openTaskCount} open
                         </span>
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
                       {highestPriority && <PriorityBadge priority={highestPriority} />}
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <ChevronRight className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
                     </div>
                   </Link>
                 </li>

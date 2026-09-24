@@ -11,7 +11,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("w-full caption-bottom text-body", className)}
         {...props}
       />
     </div>
@@ -43,7 +43,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+        "border-t bg-subtle font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -67,7 +67,7 @@ function TableRow({ className, onClick, onKeyDown, tabIndex, ...props }: React.C
         }
       }}
       className={cn(
-        "border-b has-aria-expanded:bg-accent data-[state=selected]:bg-muted",
+        "border-b has-aria-expanded:bg-surface-hover data-[state=selected]:bg-subtle",
         interactive && "interactive-row",
         className
       )}
@@ -81,7 +81,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-11 bg-muted/50 px-4 text-left align-middle text-caption font-medium whitespace-nowrap text-muted-foreground [&:has([role=checkbox])]:pr-0",
+        "h-11 bg-subtle px-4 text-left align-middle text-caption font-medium whitespace-nowrap text-fg-secondary [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -109,7 +109,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-sm text-muted-foreground", className)}
+      className={cn("mt-4 text-body text-fg-secondary", className)}
       {...props}
     />
   )

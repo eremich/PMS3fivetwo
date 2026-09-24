@@ -56,10 +56,10 @@ const ACTION_LABELS: Record<TaskStatus, string> = {
   CREATED_IN_ERROR: "Created in error",
 };
 
-const ACTION_VARIANT: Record<TaskStatus, "default" | "outline" | "destructive"> = {
-  PENDING: "default",
-  SCHEDULED: "default",
-  COMPLETE: "default",
+const ACTION_VARIANT: Record<TaskStatus, "primary" | "outline" | "destructive"> = {
+  PENDING: "primary",
+  SCHEDULED: "primary",
+  COMPLETE: "primary",
   REACTIVATE_PENDING: "outline",
   NO_LONGER_REQUIRED: "outline",
   CREATED_IN_ERROR: "destructive",
@@ -216,7 +216,7 @@ export function TaskDetailDialog({
             </div>
           )
         ) : (
-          <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+          <div className="flex flex-col gap-2 rounded-surface border border-line bg-surface p-4">
             <p className="text-body font-medium">{ACTION_LABELS[pendingAction]} — add a reason (optional)</p>
             <Textarea
               value={reason}
@@ -241,7 +241,7 @@ export function TaskDetailDialog({
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-body">
                 {formatDateTime(activeAppointment.scheduledAt)}
-                {activeAppointment.location && <span className="text-muted-foreground"> · {activeAppointment.location}</span>}
+                {activeAppointment.location && <span className="text-fg-secondary"> · {activeAppointment.location}</span>}
               </p>
               <div className="flex items-center gap-2">
                 <AppointmentStatusBadge status={activeAppointment.status} />
@@ -272,7 +272,7 @@ export function TaskDetailDialog({
           ) : (
             <div className="flex flex-col gap-2.5">
               {activeAppointment?.status === "CANCELLED" && (
-                <p className="text-caption text-muted-foreground">
+                <p className="text-caption text-fg-secondary">
                   Previous appointment cancelled — {formatDateTime(activeAppointment.scheduledAt)}
                 </p>
               )}
@@ -312,7 +312,7 @@ export function TaskDetailDialog({
           ) : (
             <div className="flex flex-col gap-2.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-body text-muted-foreground">Received {formatDateTime(latestResult.receivedAt)}</p>
+                <p className="text-body text-fg-secondary">Received {formatDateTime(latestResult.receivedAt)}</p>
                 <ResultStatusBadge status={latestResult.status} />
               </div>
               {latestResult.status === "RECEIVED" && (
@@ -342,12 +342,12 @@ export function TaskDetailDialog({
         <SectionPanel icon={ClipboardList} title="Referral form">
           {referralForm ? (
             <div className="flex flex-col gap-1.5 text-body">
-              <p className="text-caption text-muted-foreground">Captured by {CAPTURE_SOURCE_LABELS[referralForm.capturedBy]}</p>
+              <p className="text-caption text-fg-secondary">Captured by {CAPTURE_SOURCE_LABELS[referralForm.capturedBy]}</p>
               {formFields.map(
                 (field) =>
                   referralForm.fields[field.key] && (
                     <p key={field.key}>
-                      <span className="text-muted-foreground">{field.label}:</span> {referralForm.fields[field.key]}
+                      <span className="text-fg-secondary">{field.label}:</span> {referralForm.fields[field.key]}
                     </p>
                   ),
               )}
@@ -425,18 +425,18 @@ export function TaskDetailDialog({
         <div className="flex flex-col gap-2">
           <SectionLabel icon={History}>Activity log</SectionLabel>
           {log.length === 0 ? (
-            <p className="text-body text-muted-foreground">No changes recorded yet.</p>
+            <p className="text-body text-fg-secondary">No changes recorded yet.</p>
           ) : (
-            <ul className="flex flex-col gap-2.5 border-l border-border pl-3">
+            <ul className="flex flex-col gap-2.5 border-l border-line pl-3">
               {log.map((entry) => (
                 <li key={entry.id} className="text-body">
                   <p>
                     <span className="font-medium">{actorName(staffUsers, entry.changedById)}</span>{" "}
-                    <span className="text-muted-foreground">
+                    <span className="text-fg-secondary">
                       {entry.action.replaceAll("_", " ").toLowerCase()} · {formatDateTime(entry.changedAt)}
                     </span>
                   </p>
-                  {entry.details && <p className="text-muted-foreground">{entry.details}</p>}
+                  {entry.details && <p className="text-fg-secondary">{entry.details}</p>}
                 </li>
               ))}
             </ul>

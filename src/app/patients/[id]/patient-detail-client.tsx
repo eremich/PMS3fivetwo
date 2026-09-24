@@ -47,7 +47,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
     return (
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 py-24 text-center">
         <h1 className="text-h3">Patient not found</h1>
-        <p className="text-body text-muted-foreground">This patient record doesn&apos;t exist.</p>
+        <p className="text-body text-fg-secondary">This patient record doesn&apos;t exist.</p>
         <Button variant="outline" className="mt-2" nativeButton={false} render={<Link href="/patients" />}>
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to patients
@@ -63,7 +63,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
     return (
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 py-24 text-center">
         <h1 className="text-h3">Not in your clinic</h1>
-        <p className="text-body text-muted-foreground">This patient isn&apos;t assigned to your care.</p>
+        <p className="text-body text-fg-secondary">This patient isn&apos;t assigned to your care.</p>
         <Button variant="outline" className="mt-2" nativeButton={false} render={<Link href="/patients" />}>
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to patients
@@ -76,7 +76,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <Link href="/patients" className="flex w-fit items-center gap-1.5 text-body text-muted-foreground transition-colors hover:text-foreground">
+      <Link href="/patients" className="flex w-fit items-center gap-1.5 text-body text-fg-secondary transition-colors hover:text-fg">
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
         Back to patients
       </Link>
@@ -84,7 +84,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-h1 text-balance">{fullName(patient)}</h1>
-          <p className="mt-1 text-body text-muted-foreground">
+          <p className="mt-1 text-body text-fg-secondary">
             {patient.mrn} · {formatDate(patient.dateOfBirth)} ({calculateAge(patient.dateOfBirth)}){" "}
             {patient.phone && <>· {patient.phone}</>} {patient.email && <>· {patient.email}</>}
           </p>
@@ -98,8 +98,8 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
       </div>
 
       {patientEpisodes.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
-          <p className="text-body text-muted-foreground">No referrals recorded yet.</p>
+        <div className="rounded-surface border border-dashed border-line px-6 py-16 text-center">
+          <p className="text-body text-fg-secondary">No referrals recorded yet.</p>
           {canCreate && (
             <Button className="mt-4" onClick={() => setNewEpisodeOpen(true)}>
               <CalendarPlus className="h-4 w-4" aria-hidden="true" />
@@ -123,7 +123,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
               <div
                 key={episode.id}
                 className={cn(
-                  "rounded-xl border border-border bg-card",
+                  "rounded-surface border border-line bg-surface",
                   highlightedEpisodeId === episode.id && "episode-highlight",
                 )}
               >
@@ -132,12 +132,12 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
                     episodeRefs.current[episode.id] = el;
                   }}
                   tabIndex={-1}
-                  className="flex items-center justify-between gap-3 rounded-t-xl border-b border-border px-5 py-3.5 outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                  className="flex items-center justify-between gap-3 rounded-t-surface border-b border-line px-5 py-3.5 focus-ring-inset"
                 >
                   <span className="text-body font-medium">Referral received {formatDate(episode.referralReceivedAt)}</span>
                   <EpisodeStatusBadge status={status} />
                 </div>
-                <ul className="divide-y divide-border">
+                <ul className="divide-y divide-line">
                   {sortedTasks.map((task) => {
                     const appointment = getTaskAppointment(appointments, task.id);
                     const result = getTaskResult(results, task.id);
@@ -157,7 +157,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
                           <div className="flex min-w-0 flex-col">
                             <span className="text-body font-medium">{categoryLabel(task.category)}</span>
                             {details.length > 0 && (
-                              <span className="text-caption text-muted-foreground">{details.join(" · ")}</span>
+                              <span className="text-caption text-fg-secondary">{details.join(" · ")}</span>
                             )}
                           </div>
                           <div className="flex shrink-0 items-center gap-2">
@@ -170,9 +170,9 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
                   })}
                 </ul>
                 {isAdmin && billing.length > 0 && (
-                  <div className="flex flex-col gap-1.5 border-t border-border px-5 py-2.5">
+                  <div className="flex flex-col gap-1.5 border-t border-line px-5 py-2.5">
                     {billing.map((b) => (
-                      <div key={b.id} className="flex flex-wrap items-center gap-2 text-body text-muted-foreground">
+                      <div key={b.id} className="flex flex-wrap items-center gap-2 text-body text-fg-secondary">
                         <span>
                           {b.paymentType === "SELF_PAY" ? "Self-pay" : `Insurer${b.insurerName ? ` (${b.insurerName})` : ""}`} · £{b.amount}
                         </span>
@@ -182,7 +182,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
                   </div>
                 )}
                 {isAdmin && billing.length === 0 && hasCompletedTask(tasks) && (
-                  <div className="border-t border-border px-5 py-2.5">
+                  <div className="border-t border-line px-5 py-2.5">
                     <Button variant="outline" size="sm" onClick={() => setBillingEpisodeId(episode.id)}>
                       <Receipt className="h-4 w-4" aria-hidden="true" />
                       Log billing

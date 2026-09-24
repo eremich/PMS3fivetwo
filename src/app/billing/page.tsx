@@ -58,7 +58,7 @@ export default function BillingPage() {
     return (
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 py-24 text-center">
         <h1 className="text-h3">Admin only</h1>
-        <p className="text-body text-muted-foreground">Billing and activity reporting is only visible to Admin staff.</p>
+        <p className="text-body text-fg-secondary">Billing and activity reporting is only visible to Admin staff.</p>
       </div>
     );
   }
@@ -110,14 +110,14 @@ export default function BillingPage() {
                       "Unknown"
                     )}
                   </TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="text-fg-secondary">
                     {record.paymentType === "SELF_PAY" ? "Self-pay" : `Insurer${record.insurerName ? ` (${record.insurerName})` : ""}`}
                   </TableCell>
                   <TableCell className="tabular-nums">£{record.amount.toLocaleString()}</TableCell>
                   <TableCell>
                     <BillingStatusBadge status={record.status} />
                   </TableCell>
-                  <TableCell className="hidden text-muted-foreground md:table-cell">{formatDate(record.compiledAt)}</TableCell>
+                  <TableCell className="hidden text-fg-secondary md:table-cell">{formatDate(record.compiledAt)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

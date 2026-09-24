@@ -150,15 +150,15 @@ export function TasksClient() {
                       {patient ? fullName(patient) : "Unknown"}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{categoryLabel(task.category)}</TableCell>
+                  <TableCell className="text-fg-secondary">{categoryLabel(task.category)}</TableCell>
                   <TableCell>
                     <TaskStatusBadge status={task.status} />
                   </TableCell>
                   <TableCell>
                     <PriorityBadge priority={task.priority} />
                   </TableCell>
-                  <TableCell className="hidden text-muted-foreground md:table-cell">{consultant?.name ?? "—"}</TableCell>
-                  <TableCell className="hidden text-muted-foreground lg:table-cell">{formatDateTime(task.updatedAt)}</TableCell>
+                  <TableCell className="hidden text-fg-secondary md:table-cell">{consultant?.name ?? "—"}</TableCell>
+                  <TableCell className="hidden text-fg-secondary lg:table-cell">{formatDateTime(task.updatedAt)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

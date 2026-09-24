@@ -100,9 +100,9 @@ export default function AppointmentsPage() {
                       {patient ? fullName(patient) : "Unknown"}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{task ? categoryLabel(task.category) : "—"}</TableCell>
+                  <TableCell className="text-fg-secondary">{task ? categoryLabel(task.category) : "—"}</TableCell>
                   <TableCell>{formatDateTime(appointment.scheduledAt)}</TableCell>
-                  <TableCell className="hidden text-muted-foreground md:table-cell">{appointment.location ?? "—"}</TableCell>
+                  <TableCell className="hidden text-fg-secondary md:table-cell">{appointment.location ?? "—"}</TableCell>
                   <TableCell>
                     <AppointmentStatusBadge status={appointment.status} />
                   </TableCell>

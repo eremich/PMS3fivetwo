@@ -53,10 +53,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-body transition-colors duration-150 ease-out focus-ring",
+                  "flex items-center gap-3 rounded-surface border px-3.5 py-2.5 text-body transition-colors duration-150 ease-out focus-ring",
                   active
-                    ? "border-border bg-card font-semibold text-foreground shadow-xs"
-                    : "border-transparent font-medium text-sidebar-foreground hover:bg-card/70 hover:text-foreground",
+                    ? "border-line bg-nav-active font-semibold text-fg shadow-xs"
+                    : "border-transparent font-medium text-fg-secondary hover:bg-nav-hover hover:text-fg",
                 )}
               >
                 <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -68,19 +68,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col md:py-3 md:pr-3">
-        <div className="flex min-h-0 flex-1 flex-col bg-card md:rounded-2xl md:border md:border-border md:shadow-xs">
-          <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border px-4 md:h-[72px] md:px-8">
+        <div className="flex min-h-0 flex-1 flex-col bg-surface md:rounded-panel md:border md:border-line md:shadow-xs">
+          <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-line px-4 md:h-[72px] md:px-8">
             <Link href="/" aria-label="New Malden Diagnostic Centre — home" className="md:hidden">
               <Logo className="h-8" />
             </Link>
-            <p className="hidden text-body text-muted-foreground md:block">{todayLabel()}</p>
+            <p className="hidden text-body text-fg-secondary md:block">{todayLabel()}</p>
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <RoleSwitcher />
             </div>
           </header>
 
-          <nav aria-label="Primary" className="flex gap-1 overflow-x-auto border-b border-border px-3 py-2 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
+          <nav aria-label="Primary" className="flex gap-1 overflow-x-auto border-b border-line px-3 py-2 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
             {items.map((item) => {
               const active = isActive(pathname, item.href);
               return (
@@ -89,8 +89,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "shrink-0 rounded-lg px-3.5 py-1.5 text-body font-medium transition-colors focus-ring",
-                    active ? "bg-secondary font-semibold text-foreground" : "text-muted-foreground hover:bg-accent",
+                    "shrink-0 rounded-control px-3.5 py-1.5 text-body font-medium transition-colors focus-ring",
+                    active ? "bg-secondary font-semibold text-fg" : "text-fg-secondary hover:bg-surface-hover",
                   )}
                 >
                   {item.label}

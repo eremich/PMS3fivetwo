@@ -18,7 +18,7 @@ export function SearchInput({
   return (
     <div className={cn("relative min-w-56 flex-1", className)}>
       <Search
-        className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+        className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-fg-secondary"
         aria-hidden="true"
       />
       <Input

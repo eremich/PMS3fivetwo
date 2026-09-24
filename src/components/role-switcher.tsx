@@ -34,26 +34,26 @@ export function RoleSwitcher() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-lg py-1 pr-2 pl-1 text-left transition-colors duration-150 ease-out hover:bg-accent focus-ring">
+      <DropdownMenuTrigger className="flex items-center gap-2.5 rounded-control py-1 pr-2 pl-1 text-left transition-colors duration-150 ease-out hover:bg-surface-hover focus-ring">
         <Avatar className="h-9 w-9 shrink-0">
-          <AvatarFallback className="bg-primary text-primary-foreground text-caption font-medium">
+          <AvatarFallback className="bg-primary text-fg-inverse text-caption font-medium">
             {initials(currentUser.name)}
           </AvatarFallback>
         </Avatar>
         <span className="hidden min-w-0 flex-col sm:flex">
-          <span className="truncate text-body font-medium leading-tight text-foreground">
+          <span className="truncate text-body font-medium leading-tight text-fg">
             {currentUser.name}
           </span>
-          <span className="truncate text-caption leading-tight text-muted-foreground">
+          <span className="truncate text-caption leading-tight text-fg-secondary">
             {roleLabels[currentUser.role]}
             {currentUser.speciality ? ` · ${currentUser.speciality}` : ""}
           </span>
         </span>
-        <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        <ChevronsUpDown className="h-4 w-4 shrink-0 text-fg-secondary" aria-hidden="true" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center gap-1.5 text-caption font-medium text-muted-foreground">
+          <DropdownMenuLabel className="flex items-center gap-1.5 text-caption font-medium text-fg-secondary">
             <UserRound className="h-3.5 w-3.5" aria-hidden="true" />
             Demo — sign in as
           </DropdownMenuLabel>
@@ -65,13 +65,13 @@ export function RoleSwitcher() {
               className="gap-2.5"
             >
               <Avatar className="h-7 w-7 shrink-0">
-                <AvatarFallback className="bg-secondary text-secondary-foreground text-caption font-medium">
+                <AvatarFallback className="bg-secondary text-fg text-caption font-medium">
                   {initials(user.name)}
                 </AvatarFallback>
               </Avatar>
               <span className="flex min-w-0 flex-col">
                 <span className="truncate text-body">{user.name}</span>
-                <span className="truncate text-caption text-muted-foreground">
+                <span className="truncate text-caption text-fg-secondary">
                   {roleLabels[user.role]}
                   {user.speciality ? ` · ${user.speciality}` : ""}
                 </span>

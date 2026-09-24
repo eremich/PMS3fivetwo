@@ -130,7 +130,7 @@ export function RegisterPatientDialog({
           </div>
 
           {duplicate && (
-            <div className="flex animate-in items-start gap-2 rounded-lg bg-warning/10 px-3 py-2.5 text-body text-foreground fade-in-0 slide-in-from-top-1 duration-200 ease-out">
+            <div className="flex animate-in items-start gap-2 rounded-control bg-warning-subtle px-3 py-2.5 text-body text-fg fade-in-0 slide-in-from-top-1 duration-200 ease-out">
               <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
               <span>
                 A patient named <strong>{fullName(duplicate)}</strong> with this date of birth already exists (
@@ -140,7 +140,7 @@ export function RegisterPatientDialog({
           )}
 
           {touched && !isValid && (
-            <p className="text-body text-destructive">First name, last name, and date of birth are required.</p>
+            <p className="text-body text-destructive-text">First name, last name, and date of birth are required.</p>
           )}
 
           <DialogFooter>

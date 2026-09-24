@@ -1,0 +1,64 @@
+/*
+ * TIER 3 — COMPONENT TOKENS
+ * Only where a component needs its own tuning knob. Values reference semantic tokens
+ * (or raw sizes); they never reference primitives. Keep this file small.
+ * Naming: --{component}-{property}[-{variant}]
+ */
+:root {
+  /* Control heights: one rhythm for buttons, inputs, selects, chips */
+  --control-height-xs: 1.75rem;
+  --control-height-sm: 2rem;
+  --control-height-md: 2.5rem;
+  --control-height-lg: 2.75rem;
+
+  /* Keyboard focus ring */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Navigation item */
+  --nav-item-bg-hover: color-mix(in oklch, var(--bg-surface) 70%, transparent);
+  --nav-item-bg-active: var(--bg-surface);
+
+  /* Button: every variant defines fill, hover, pressed, text (and border where it has one) */
+  --button-primary-bg: var(--action-primary-default);
+  --button-primary-bg-hover: var(--action-primary-hover);
+  --button-primary-bg-pressed: var(--action-primary-pressed);
+  --button-primary-text: var(--text-inverse);
+
+  --button-secondary-bg: var(--action-secondary-default);
+  --button-secondary-bg-hover: var(--action-secondary-hover);
+  --button-secondary-bg-pressed: var(--action-secondary-pressed);
+  --button-secondary-text: var(--text-primary);
+
+  --button-outline-bg: var(--bg-surface);
+  --button-outline-bg-hover: var(--bg-surface-hover);
+  --button-outline-bg-pressed: var(--bg-surface-pressed);
+  --button-outline-text: var(--text-primary);
+  --button-outline-border: var(--border-default);
+
+  --button-ghost-bg-hover: var(--bg-surface-hover);
+  --button-ghost-bg-pressed: var(--bg-surface-pressed);
+  --button-ghost-text: var(--text-primary);
+
+  --button-destructive-bg: var(--destructive-subtle);
+  --button-destructive-bg-hover: var(--destructive-subtle-hover);
+  --button-destructive-bg-pressed: var(--destructive-border);
+  --button-destructive-text: var(--destructive-text);
+
+  --button-link-text: var(--text-link);
+
+  /* Field (input, textarea, select trigger) */
+  --field-bg: var(--bg-surface);
+  --field-text: var(--text-primary);
+  --field-placeholder: var(--text-secondary);
+  --field-border: var(--border-strong);
+  --field-border-hover: var(--border-strong-hover);
+  --field-border-focus: var(--border-focus);
+  --field-border-invalid: var(--destructive-default);
+  --field-ring-invalid: var(--destructive-subtle-hover);
+  --field-bg-disabled: var(--bg-subtle);
+
+  /* Menu / select item */
+  --menu-item-bg-hover: var(--bg-surface-hover);
+  --menu-item-text: var(--text-primary);
+}

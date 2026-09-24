@@ -74,23 +74,23 @@ export default function DashboardPage() {
       </div>
 
       <TableCard>
-        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
+        <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
           <div className="flex items-center gap-2">
             <TriangleAlert className="h-4 w-4 text-warning" aria-hidden="true" />
             <h2 className="text-h4">Needs attention</h2>
           </div>
           <Link
             href="/tasks"
-            className="flex items-center gap-1 text-body font-semibold text-primary-text transition-colors hover:opacity-80"
+            className="flex items-center gap-1 text-body font-semibold text-fg-link transition-colors hover:opacity-80"
           >
             View all tasks
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
         {needsAttention.length === 0 ? (
-          <p className="px-5 py-8 text-center text-body text-muted-foreground">Nothing urgent right now.</p>
+          <p className="px-5 py-8 text-center text-body text-fg-secondary">Nothing urgent right now.</p>
         ) : (
-          <ul className="divide-y divide-border">
+          <ul className="divide-y divide-line">
             {needsAttention.map((task) => {
               const name = patientName(task.episodeOfCareId);
               return (
@@ -103,7 +103,7 @@ export default function DashboardPage() {
                       <PatientAvatar name={name} />
                       <div className="flex min-w-0 flex-col">
                         <span className="truncate font-semibold">{name}</span>
-                        <span className="text-caption text-muted-foreground">{categoryLabel(task.category)}</span>
+                        <span className="text-caption text-fg-secondary">{categoryLabel(task.category)}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
