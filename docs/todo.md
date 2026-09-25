@@ -118,6 +118,18 @@ existing patterns). No new colours, sizes or one-off styles; a new need means a 
 - [ ] 6. Red-flag 2-week-wait countdown + queue sorted by it
 - [ ] 7. Accessibility + mobile pass (see Phase 7)
 
+#### Review (2026-09-25)
+- Steps 1-3 merged to `main` (eremich/PMS3fivetwo#1). The prototype now follows the Miro
+  Patient Pathway: diagnostic vs consultation after attendance, clinician confirmation that
+  billing waits for, and a further test that becomes a new task in the same episode.
+- Built only from the design system: one new component (appointment type badge) with its
+  story and docs rows; no new tokens.
+- Seed data has a scheduled consultation (Grace Hughes) so reviewers can try that branch.
+- The portfolio case study shows the same flow (diagram, Miro board, Diagnostic or
+  consultation screens), so the live demo and the case tell one story.
+- Vercel: the project was connected to this repository after the merge, so deploys start
+  from the next commit on `main`.
+
 ### Phase 7 — Polish
 - [ ] Accessibility audit pass (WCAG 2.1 AA)
 - [ ] Final design-reviewer anti-slop pass across all screens
