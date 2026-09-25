@@ -19,7 +19,7 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { RadioCard } from "@/components/ds/radio-card";
 import { PriorityBadge } from "@/components/ds/status-badge";
 
-const CATEGORIES: ReferralCategory[] = [
+export const CATEGORIES: ReferralCategory[] = [
   "RADIOLOGY",
   "RESPIRATORY",
   "CARDIOLOGY",
@@ -29,7 +29,7 @@ const CATEGORIES: ReferralCategory[] = [
   "PATIENT",
 ];
 
-const PRIORITIES: Priority[] = ["ROUTINE", "URGENT", "RED_FLAG"];
+export const PRIORITIES: Priority[] = ["ROUTINE", "URGENT", "RED_FLAG"];
 
 interface NewEpisodeDialogProps {
   open: boolean;

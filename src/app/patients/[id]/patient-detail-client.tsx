@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, CalendarPlus, Receipt } from "lucide-react";
+import { ArrowLeft, CalendarPlus, Clock, Receipt } from "lucide-react";
 import { useAppData } from "@/lib/app-context";
 import {
   calculateAge,
@@ -17,6 +17,7 @@ import {
   getTaskAppointment,
   getTaskResult,
   hasCompletedTask,
+  isEpisodeBillable,
   isTaskOpen,
 } from "@/lib/patient-helpers";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ const resultStatusLabels: Record<string, string> = {
 };
 
 export function PatientDetailClient({ patientId }: { patientId: string }) {
-  const { currentUser, patients, episodes, bookingTasks, appointments, results, billingRecords } = useAppData();
+  const { currentUser, patients, episodes, bookingTasks, appointments, results, billingRecords, activityLog } = useAppData();
   const [newEpisodeOpen, setNewEpisodeOpen] = useState(false);
   const [highlightedEpisodeId, setHighlightedEpisodeId] = useState<string | null>(null);
   const [billingEpisodeId, setBillingEpisodeId] = useState<string | null>(null);
@@ -113,6 +114,7 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
             const tasks = getEpisodeTasks(bookingTasks, episode.id);
             const status = getEpisodeStatus(tasks);
             const billing = billingRecords.filter((b) => b.episodeOfCareId === episode.id);
+            const billable = isEpisodeBillable(tasks, activityLog);
             const sortedTasks = [...tasks].sort((a, b) => {
               const aOpen = isTaskOpen(a.status) ? 0 : 1;
               const bOpen = isTaskOpen(b.status) ? 0 : 1;
@@ -181,7 +183,13 @@ export function PatientDetailClient({ patientId }: { patientId: string }) {
                     ))}
                   </div>
                 )}
-                {isAdmin && billing.length === 0 && hasCompletedTask(tasks) && (
+                {isAdmin && billing.length === 0 && !billable && hasCompletedTask(tasks) && (
+                  <p className="flex items-center gap-1.5 border-t border-line px-5 py-3 text-caption text-fg-secondary">
+                    <Clock className="size-3.5 shrink-0" aria-hidden="true" />
+                    Billing opens once the clinician confirms the tests were carried out.
+                  </p>
+                )}
+                {isAdmin && billing.length === 0 && billable && (
                   <div className="border-t border-line px-5 py-2.5">
                     <Button variant="outline" size="sm" onClick={() => setBillingEpisodeId(episode.id)}>
                       <Receipt className="h-4 w-4" aria-hidden="true" />

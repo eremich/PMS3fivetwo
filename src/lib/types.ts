@@ -54,6 +54,9 @@ export interface BookingTask {
   updatedAt: string;
 }
 
+// Diagnostic = a scan or test is carried out; consultation = the patient sees a consultant.
+export type AppointmentKind = "DIAGNOSTIC" | "CONSULTATION";
+
 export type AppointmentStatus = "BOOKED" | "ATTENDED" | "CANCELLED";
 
 export interface Appointment {

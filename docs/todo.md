@@ -105,6 +105,19 @@ portfolio site.
 - [ ] Publish Storybook (Vercel / Chromatic) for the portfolio case study
 - [ ] README rewritten as the case study (current README is the designer kit's)
 
+### Phase 6b — Align with the Miro Patient Pathway + portfolio features (2026-09-24)
+Rule: build only from the Storybook design system (tokens, `ds/` + `ui/` components,
+existing patterns). No new colours, sizes or one-off styles; a new need means a token/component first.
+
+- [x] 1. Further-test loop: "Request further test" creates a new task in the same episode
+      (flow: "Request for further test/appointment? → Yes → Create Task")
+- [x] 2. Appointment type: diagnostic vs consultation; diagnostic → "Confirm tests carried out"
+- [x] 3. Test confirmation logged → unlocks "Log billing" (activity report feeds billing)
+- [ ] 4. Guided demo scenario for reviewers (role hand-offs, 2-minute walkthrough)
+- [ ] 5. Patient pathway timeline on the patient page (the Miro flow inside the UI)
+- [ ] 6. Red-flag 2-week-wait countdown + queue sorted by it
+- [ ] 7. Accessibility + mobile pass (see Phase 7)
+
 ### Phase 7 — Polish
 - [ ] Accessibility audit pass (WCAG 2.1 AA)
 - [ ] Final design-reviewer anti-slop pass across all screens

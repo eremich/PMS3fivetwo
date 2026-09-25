@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import type { ReactNode } from "react";
-import type { AppointmentStatus, BillingStatus, Priority, ResultStatus, TaskStatus } from "@/lib/types";
+import type { AppointmentKind, AppointmentStatus, BillingStatus, Priority, ResultStatus, TaskStatus } from "@/lib/types";
 import {
+  AppointmentKindBadge,
   AppointmentStatusBadge,
   BillingStatusBadge,
   EpisodeStatusBadge,
@@ -13,6 +14,7 @@ import {
 const TASK: TaskStatus[] = ["PENDING", "SCHEDULED", "COMPLETE", "REACTIVATE_PENDING", "NO_LONGER_REQUIRED", "CREATED_IN_ERROR"];
 const PRIORITY: Priority[] = ["ROUTINE", "URGENT", "RED_FLAG"];
 const APPOINTMENT: AppointmentStatus[] = ["BOOKED", "ATTENDED", "CANCELLED"];
+const APPOINTMENT_KIND: AppointmentKind[] = ["DIAGNOSTIC", "CONSULTATION"];
 const RESULT: ResultStatus[] = ["RECEIVED", "SENT_TO_REFERRER", "MORE_NEEDED", "COMPLETE"];
 const BILLING: BillingStatus[] = ["PENDING", "PAID", "INVOICED"];
 
@@ -25,7 +27,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-const meta = { title: "Components/Status badges", tags: ["!autodocs"], parameters: { docs: { description: { component: "Soft-tinted status pill with an icon, so meaning never depends on colour alone. Tones come from the feedback tokens: info, success, warning, danger and neutral. One badge per domain: task, priority, appointment, result, billing, episode." } } } } satisfies Meta;
+const meta = { title: "Components/Status badges", tags: ["!autodocs"], parameters: { docs: { description: { component: "Soft-tinted status pill with an icon, so meaning never depends on colour alone. Tones come from the feedback tokens: info, success, warning, danger and neutral. One badge per domain: task, priority, appointment type, appointment, result, billing, episode." } } } } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -40,6 +42,11 @@ export const All: Story = {
       <Row label="Priority">
         {PRIORITY.map((s) => (
           <PriorityBadge key={s} priority={s} />
+        ))}
+      </Row>
+      <Row label="Appointment type">
+        {APPOINTMENT_KIND.map((k) => (
+          <AppointmentKindBadge key={k} kind={k} />
         ))}
       </Row>
       <Row label="Appointment">

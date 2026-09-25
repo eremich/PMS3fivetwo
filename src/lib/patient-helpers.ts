@@ -1,6 +1,7 @@
 import type {
   ActivityLogEntry,
   Appointment,
+  AppointmentKind,
   BookingTask,
   EpisodeOfCare,
   Patient,
@@ -148,6 +149,30 @@ export function getEpisodeForTask(episodes: EpisodeOfCare[], task: BookingTask):
 export function getPatientForEpisode(patients: Patient[], episode: EpisodeOfCare | null): Patient | null {
   if (!episode) return null;
   return patients.find((p) => p.id === episode.patientId) ?? null;
+}
+
+// Scans and tests vs seeing a consultant (the flow's "Diagnostic Appointment?" decision).
+const DIAGNOSTIC_CATEGORIES: ReferralCategory[] = ["RADIOLOGY", "CARDIOLOGY", "RESPIRATORY", "PATHOLOGY"];
+
+export function getAppointmentKind(category: ReferralCategory): AppointmentKind {
+  return DIAGNOSTIC_CATEGORIES.includes(category) ? "DIAGNOSTIC" : "CONSULTATION";
+}
+
+export const TESTS_CONFIRMED_ACTION = "TESTS_CONFIRMED";
+
+// The clinician's confirmation lives in the activity log, which feeds the billing report.
+export function getTestsConfirmation(activityLog: ActivityLogEntry[], taskId: string): ActivityLogEntry | null {
+  return activityLog.find((a) => a.bookingTaskId === taskId && a.action === TESTS_CONFIRMED_ACTION) ?? null;
+}
+
+// Flow: "Test confirmation logged for activity report to feed billing". A diagnostic task
+// counts once the clinician confirms the tests; a consultation counts once it is complete.
+export function isEpisodeBillable(tasks: BookingTask[], activityLog: ActivityLogEntry[]): boolean {
+  return tasks.some((t) =>
+    getAppointmentKind(t.category) === "DIAGNOSTIC"
+      ? getTestsConfirmation(activityLog, t.id) !== null
+      : t.status === "COMPLETE",
+  );
 }
 
 export function getTaskActivityLog(activityLog: ActivityLogEntry[], taskId: string): ActivityLogEntry[] {

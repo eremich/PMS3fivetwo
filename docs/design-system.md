@@ -143,7 +143,7 @@ Light (`:root`) and dark (`.dark`) share token names; only semantic values chang
 | `SectionPanel` / `SectionLabel` | titled panel with icon inside dialogs |
 | `RadioCard` | selectable option row (use inside `RadioGroup`) |
 | `PatientAvatar` | initials avatar, deterministic hue from name |
-| `status-badge` | `TaskStatusBadge`, `PriorityBadge`, `AppointmentStatusBadge`, `ResultStatusBadge`, `BillingStatusBadge`, `EpisodeStatusBadge` (shared `Badge`, tones from feedback tokens) |
+| `status-badge` | `TaskStatusBadge`, `PriorityBadge`, `AppointmentKindBadge`, `AppointmentStatusBadge`, `ResultStatusBadge`, `BillingStatusBadge`, `EpisodeStatusBadge` (shared `Badge`, tones from feedback tokens) |
 
 Base primitives live in `src/components/ui` (shadcn / Base UI): button, input, textarea, select, dialog, dropdown-menu, radio-group, label, avatar, table. All class merging goes through `cn` from `@/lib/utils` (it knows our type tokens).
 

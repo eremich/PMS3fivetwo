@@ -7,12 +7,14 @@ import {
   Flag,
   Minus,
   RotateCcw,
+  ScanLine,
   Send,
+  Stethoscope,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { AppointmentStatus, BillingStatus, Priority, ResultStatus, TaskStatus } from "@/lib/types";
+import type { AppointmentKind, AppointmentStatus, BillingStatus, Priority, ResultStatus, TaskStatus } from "@/lib/types";
 
 type Tone = "info" | "success" | "warning" | "danger" | "neutral";
 type BadgeConfig = { label: string; tone: Tone; icon: LucideIcon };
@@ -48,6 +50,11 @@ const appointmentStatusConfig: Record<AppointmentStatus, BadgeConfig> = {
   CANCELLED: { label: "Cancelled", tone: "neutral", icon: X },
 };
 
+const appointmentKindConfig: Record<AppointmentKind, BadgeConfig> = {
+  DIAGNOSTIC: { label: "Diagnostic", tone: "neutral", icon: ScanLine },
+  CONSULTATION: { label: "Consultation", tone: "neutral", icon: Stethoscope },
+};
+
 const resultStatusConfig: Record<ResultStatus, BadgeConfig> = {
   RECEIVED: { label: "Result received", tone: "info", icon: CircleDot },
   SENT_TO_REFERRER: { label: "Sent to referrer", tone: "neutral", icon: Send },
@@ -71,6 +78,10 @@ export function PriorityBadge({ priority, className }: { priority: Priority; cla
 
 export function AppointmentStatusBadge({ status, className }: { status: AppointmentStatus; className?: string }) {
   return <Badge config={appointmentStatusConfig[status]} className={className} />;
+}
+
+export function AppointmentKindBadge({ kind, className }: { kind: AppointmentKind; className?: string }) {
+  return <Badge config={appointmentKindConfig[kind]} className={className} />;
 }
 
 export function ResultStatusBadge({ status, className }: { status: ResultStatus; className?: string }) {
