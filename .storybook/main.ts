@@ -1,10 +1,15 @@
 import type { StorybookConfig } from "@storybook/nextjs-vite";
+import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(ts|tsx)"],
   addons: [
     "@storybook/addon-a11y",
-    "@storybook/addon-docs",
+    {
+      // GitHub-flavoured Markdown, so tables in the MDX docs render as tables
+      name: "@storybook/addon-docs",
+      options: { mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } } },
+    },
     "@storybook/addon-themes",
     "@storybook/addon-mcp",
     "storybook-addon-pseudo-states",
